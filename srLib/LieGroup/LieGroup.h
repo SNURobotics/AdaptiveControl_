@@ -1483,8 +1483,8 @@ public:
 	friend Inertia	 CapsuleInertia(SR_real d, SR_real r, SR_real h);
 
 
-
-private:
+	
+//private:
 	SR_real			_I[10];
 };
 

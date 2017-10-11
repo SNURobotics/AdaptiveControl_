@@ -31,4 +31,4 @@
   srWeldJoint.cpp
   srgCamera.cpp
   srgGeometryDraw.cpp
-  srLib.vcxproj -> D:\AdaptiveControl\Release\srLib.lib
+  srLib.vcxproj -> D:\adaptivecontrol2\Release\srLib.lib

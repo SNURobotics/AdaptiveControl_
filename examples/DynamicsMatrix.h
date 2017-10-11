@@ -24,14 +24,16 @@ public: // variables
 	vector<se3> mvCurrentV;
 	vector<se3> mvA;
 
-	MatrixXd mMatrixA;
-	MatrixXd mMatrixL;
-	MatrixXd mMatrixG;
-	MatrixXd mMatrixGamma;
-	MatrixXd mMatrixCbar;
-	MatrixXd mVdot0;
-	MatrixXd mMatrix_adA;
-	MatrixXd mMatrix_adv_t;
+	VectorXd vdot0;//
+	VectorXd qdot;//
+	MatrixXd mMatrixA;//
+	MatrixXd mMatrixL;//
+	MatrixXd mMatrixG;//
+	MatrixXd mMatrixGamma;//
+	MatrixXd mMatrixCbar;//
+	MatrixXd mVdot_base;//
+	MatrixXd mMatrix_adA;//
+	MatrixXd mMatrix_adv_t;//
 	//MatrixXd MatrixY;
 
 	MatrixXd M;
@@ -53,6 +55,7 @@ public: // functions
 	void ComputeCbar();
 	void Compute_adA();
 	void Compute_adv_t();
+	void ComputeVdot_base();
 
 	void MassMatrix();
 	void CoriolisMatrix();

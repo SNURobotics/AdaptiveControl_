@@ -41,7 +41,7 @@ void robot1::buildRobot1()
 		//m_link[i].GetGeomInfo().SetDimension(body_diameter, body_height);
 		m_link[i].GetGeomInfo().SetColor(1.0, 0.0, 0.0, 0.2);
 		m_link[i].SetInertia(I_list[i]);
-		m_link[i].SetDamping(0.01);
+		m_link[i].SetDamping(0.0);
 	}
 
 	//Joint Assembly

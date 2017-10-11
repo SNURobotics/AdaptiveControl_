@@ -33,9 +33,20 @@ srSpace gSpace;
 
 robot1 Robot;
 AdaptiveControl AdaptiveController; 
-vector<Inertia*> vpEstimatedInertia; // 초기화 해줘야 함 Eigen::Matrix<double, 6, 6> I_tensor; I.ToArray(I_tensor.data());
 DynamicsMatrix* DynMatrices;
 //srSystem wam7_robot;
+
+/////////////ERASE HERE///////////////
+
+vector<Inertia*> I_list;
+Inertia I1(0.294863503, 0.113500168, 0.25065343, 0.007950225, 0.0000931, 0.000187103, -0.047746296, 1.312477649, -0.007159328, 10.76768767);
+Inertia I2(0.0260684, 0.014722017, 0.019348137, 0.0000135, 0.000117001, -0.0000366, -0.009182943, 0.120340603, 0.059755955, 3.87493756);
+Inertia I3(0.13671601, 0.005883535, 0.139513702, 0.016804342, -0.0000051, 0.00000529, -0.068952728, 0.37398727, 0.0000596, 1.80228141);
+Inertia I4(0.057192689, 0.05716471, 0.003004404, -0.0000147, -0.0000819, 0.0000942, 0.011965126, -0.000550647, 0.31854219, 2.40016804);
+Inertia I5(0.0000559, 0.0000782, 0.0000659, -0.000000256, 0.00000000188, 0.000000833, 0.000011, 0.000632683, 0.000539377, 0.12376019);
+Inertia I6(0.000931067, 0.000498334, 0.000574835, -0.00000148, 0.00000201, 0.000221618, -0.0000513, -0.007118902, 0.010316994, 0.41797364);
+Inertia I7(0.0000385, 0.0000388, 0.0000741, 0.000000191, -0.0000000177, 0.0000000362, -0.00000547, 0.0000112, -0.00022211, 0.06864753);
+////////////////////////////////////
 
 // >>>>> DECLARE VARIABLES HERE. <<<<<
 // Ground
@@ -116,13 +127,15 @@ void User_Modeling()
 	// >>>>> WRITE YOUR MODELING CODE HERE. >>>>>
 	gSpace.AddSystem(&Robot);
 
+
+
 	// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 	////- Space
 	// Set simulation time step.
 	gSpace.SetTimestep(0.0005);
 	// Set gravity
-	gSpace.SetGravity(0.0, 0.0, -9.8);
+	gSpace.SetGravity(0.0, 0.0, 9.8);
 	// Set number of sub-step for rendering
 	gSpace.SetNumberofSubstepForRendering(50);
 }
@@ -130,12 +143,27 @@ void User_Modeling()
 // Simulation Setting.
 void User_SimulationSetting()
 {
-    // Set user control loop function.
-    gSpace.SET_USER_CONTROL_FUNCTION(User_CBFunc_ControlLoop);
-
+	
     // Initialize for dynamics simulation.
     gSpace.DYN_MODE_PRESTEP();
 	DynMatrices = new DynamicsMatrix(&Robot, &AdaptiveController);
+
+	///////////////////// erase here //////////////////////////
+
+	I_list.push_back(&I1);
+	I_list.push_back(&I2);
+	I_list.push_back(&I3);
+	I_list.push_back(&I4);
+	I_list.push_back(&I5);
+	I_list.push_back(&I6);
+	I_list.push_back(&I7);
+
+	DynMatrices->mvpEstimatedInertia = I_list;
+	
+	////////////////////////////////////////////
+
+	// Set user control loop function.
+	gSpace.SET_USER_CONTROL_FUNCTION(User_CBFunc_ControlLoop);
 
     // Set target space to render.
     // Let srSimpleRenderer know what you want to draw on screen.
@@ -161,6 +189,23 @@ void User_CBFunc_ControlLoop()
 {
 	//AdaptiveControl.AdaptParameter();
 	//AdaptiveControl.ApplyTorque(); // using updated inertia.
+	
+	
+	// torque from dynamicMatrix
+	DynMatrices->UpdateMatrices();
+	int i = 3;
+	VectorXd qddot = VectorXd::Zero(7);
+	for (int j = 0; j < 7; j++)
+	{
+		qddot[j] = Robot.m_joint[j].GetRevoluteJointState().m_rValue[2];
+		Robot.m_joint[j].m_State.m_rCommand = 0.01*I_list[j]->GetMass();
+	}
+	
+	//cout << i + 1 << "th joint actual torque: " << Robot.m_joint[i].GetRevoluteJointState().m_rValue[3] << endl;
+	cout << i+1 << "th joint actual torque: " << endl << (DynMatrices->M * qddot + DynMatrices->C * DynMatrices->qdot + DynMatrices->N) << endl;
+	//cout << "DynMatrices->mMatrixG " << endl << DynMatrices->mMatrixG << endl;
+
+
 }
 
 void User_CBFunc_Render(void* pvData)
