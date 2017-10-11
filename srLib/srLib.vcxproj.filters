@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{8737ac3f-84be-40e9-9e41-0ec7560a1d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LieGroup">
+      <UniqueIdentifier>{9100467d-eb34-48b9-90a5-192bca27c936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{036a5666-701c-4774-bf3f-cf2abce22f9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="srDyn">
+      <UniqueIdentifier>{ed98a5aa-63e2-4d81-b784-c1f62d6516d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="srg">
+      <UniqueIdentifier>{0dda6f35-1cde-4c02-bac2-ce7187cc6c57}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\types.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\utils.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="LieGroup\LieGroup.h">
+      <Filter>LieGroup</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Model3DS.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\SimpleRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\SimpleViewer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Texture.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srBallJoint.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srClosedLoopConstraint.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srCollision.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srConstraint.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srContactConstraint.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srDYN.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srEntity.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srGeometryInfo.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srIRSensor.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srISLAND.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srJoint.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srJointConstraint.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srLinearSpring.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srLink.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srObject.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srPrismaticJoint.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srRangeFinder.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srRevoluteJoint.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srSensor.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srSpace.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srSpring.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srState.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srSystem.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srTouchSensor.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srUniversalJoint.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srDyn\srWeldJoint.h">
+      <Filter>srDyn</Filter>
+    </ClInclude>
+    <ClInclude Include="srg\srg.h">
+      <Filter>srg</Filter>
+    </ClInclude>
+    <ClInclude Include="srg\srgBitmap.h">
+      <Filter>srg</Filter>
+    </ClInclude>
+    <ClInclude Include="srg\srgCamera.h">
+      <Filter>srg</Filter>
+    </ClInclude>
+    <ClInclude Include="srg\srgColor.h">
+      <Filter>srg</Filter>
+    </ClInclude>
+    <ClInclude Include="srg\srgFont.h">
+      <Filter>srg</Filter>
+    </ClInclude>
+    <ClInclude Include="srg\srgGeometryDraw.h">
+      <Filter>srg</Filter>
+    </ClInclude>
+    <ClInclude Include="srg\srgL.h">
+      <Filter>srg</Filter>
+    </ClInclude>
+    <ClInclude Include="srg\srgLieGroup.h">
+      <Filter>srg</Filter>
+    </ClInclude>
+    <ClInclude Include="srg\srgMath.h">
+      <Filter>srg</Filter>
+    </ClInclude>
+    <ClInclude Include="LieGroup\_array.h" />
+    <ClInclude Include="LieGroup\rmatrix3.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="common\utils.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="LieGroup\LieGroup.cpp">
+      <Filter>LieGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Model3DS.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\SimpleRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\SimpleViewer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Texture.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srBallJoint.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srClosedLoopConstraint.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srCollision.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srCollisionPair.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srConstraint.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srContactConstraint.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srDYN.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srEntity.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srGeometryInfo.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srIRSensor.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srISLAND.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srJoint.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srJointConstraint.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srLinearSpring.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srLink.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srObject.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srPrismaticJoint.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srRangeFinder.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srRevoluteJoint.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srSensor.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srSpace.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srSpring.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srState.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srSystem.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srTouchSensor.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srUniversalJoint.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srDyn\srWeldJoint.cpp">
+      <Filter>srDyn</Filter>
+    </ClCompile>
+    <ClCompile Include="srg\srg.cpp">
+      <Filter>srg</Filter>
+    </ClCompile>
+    <ClCompile Include="srg\srgBitmap.cpp">
+      <Filter>srg</Filter>
+    </ClCompile>
+    <ClCompile Include="srg\srgCamera.cpp">
+      <Filter>srg</Filter>
+    </ClCompile>
+    <ClCompile Include="srg\srgColor.cpp">
+      <Filter>srg</Filter>
+    </ClCompile>
+    <ClCompile Include="srg\srgFont.cpp">
+      <Filter>srg</Filter>
+    </ClCompile>
+    <ClCompile Include="srg\srgGeometryDraw.cpp">
+      <Filter>srg</Filter>
+    </ClCompile>
+    <ClCompile Include="LieGroup\rmatrix3.cpp" />
+    <ClCompile Include="LieGroup\eislinpack.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LieGroup\LieGroup.inl">
+      <Filter>LieGroup</Filter>
+    </None>
+  </ItemGroup>
+</Project>

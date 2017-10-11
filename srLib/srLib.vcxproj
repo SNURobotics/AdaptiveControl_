@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7DFF988B-40D2-4E41-B66F-04E9A4EC4407}</ProjectGuid>
+    <RootNamespace>srLib</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\_INC\;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glut32.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\_LIB;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>..\_LIB;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\_INC\;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glut32.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\_LIB;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>..\_LIB;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="common\types.h" />
+    <ClInclude Include="common\utils.h" />
+    <ClInclude Include="LieGroup\LieGroup.h" />
+    <ClInclude Include="LieGroup\rmatrix3.h" />
+    <ClInclude Include="LieGroup\_array.h" />
+    <ClInclude Include="Renderer\Model3DS.h" />
+    <ClInclude Include="Renderer\SimpleRenderer.h" />
+    <ClInclude Include="Renderer\SimpleViewer.h" />
+    <ClInclude Include="Renderer\Texture.h" />
+    <ClInclude Include="srDyn\srBallJoint.h" />
+    <ClInclude Include="srDyn\srClosedLoopConstraint.h" />
+    <ClInclude Include="srDyn\srCollision.h" />
+    <ClInclude Include="srDyn\srConstraint.h" />
+    <ClInclude Include="srDyn\srContactConstraint.h" />
+    <ClInclude Include="srDyn\srDYN.h" />
+    <ClInclude Include="srDyn\srEntity.h" />
+    <ClInclude Include="srDyn\srGeometryInfo.h" />
+    <ClInclude Include="srDyn\srIRSensor.h" />
+    <ClInclude Include="srDyn\srISLAND.h" />
+    <ClInclude Include="srDyn\srJoint.h" />
+    <ClInclude Include="srDyn\srJointConstraint.h" />
+    <ClInclude Include="srDyn\srLinearSpring.h" />
+    <ClInclude Include="srDyn\srLink.h" />
+    <ClInclude Include="srDyn\srObject.h" />
+    <ClInclude Include="srDyn\srPrismaticJoint.h" />
+    <ClInclude Include="srDyn\srRangeFinder.h" />
+    <ClInclude Include="srDyn\srRevoluteJoint.h" />
+    <ClInclude Include="srDyn\srSensor.h" />
+    <ClInclude Include="srDyn\srSpace.h" />
+    <ClInclude Include="srDyn\srSpring.h" />
+    <ClInclude Include="srDyn\srState.h" />
+    <ClInclude Include="srDyn\srSystem.h" />
+    <ClInclude Include="srDyn\srTouchSensor.h" />
+    <ClInclude Include="srDyn\srUniversalJoint.h" />
+    <ClInclude Include="srDyn\srWeldJoint.h" />
+    <ClInclude Include="srg\srg.h" />
+    <ClInclude Include="srg\srgBitmap.h" />
+    <ClInclude Include="srg\srgCamera.h" />
+    <ClInclude Include="srg\srgColor.h" />
+    <ClInclude Include="srg\srgFont.h" />
+    <ClInclude Include="srg\srgGeometryDraw.h" />
+    <ClInclude Include="srg\srgL.h" />
+    <ClInclude Include="srg\srgLieGroup.h" />
+    <ClInclude Include="srg\srgMath.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="common\utils.cpp" />
+    <ClCompile Include="LieGroup\eislinpack.cpp" />
+    <ClCompile Include="LieGroup\LieGroup.cpp" />
+    <ClCompile Include="LieGroup\rmatrix3.cpp" />
+    <ClCompile Include="Renderer\Model3DS.cpp" />
+    <ClCompile Include="Renderer\SimpleRenderer.cpp" />
+    <ClCompile Include="Renderer\SimpleViewer.cpp" />
+    <ClCompile Include="Renderer\Texture.cpp" />
+    <ClCompile Include="srDyn\srBallJoint.cpp" />
+    <ClCompile Include="srDyn\srClosedLoopConstraint.cpp" />
+    <ClCompile Include="srDyn\srCollision.cpp" />
+    <ClCompile Include="srDyn\srCollisionPair.cpp" />
+    <ClCompile Include="srDyn\srConstraint.cpp" />
+    <ClCompile Include="srDyn\srContactConstraint.cpp" />
+    <ClCompile Include="srDyn\srDYN.cpp" />
+    <ClCompile Include="srDyn\srEntity.cpp" />
+    <ClCompile Include="srDyn\srGeometryInfo.cpp" />
+    <ClCompile Include="srDyn\srIRSensor.cpp" />
+    <ClCompile Include="srDyn\srISLAND.cpp" />
+    <ClCompile Include="srDyn\srJoint.cpp" />
+    <ClCompile Include="srDyn\srJointConstraint.cpp" />
+    <ClCompile Include="srDyn\srLinearSpring.cpp" />
+    <ClCompile Include="srDyn\srLink.cpp" />
+    <ClCompile Include="srDyn\srObject.cpp" />
+    <ClCompile Include="srDyn\srPrismaticJoint.cpp" />
+    <ClCompile Include="srDyn\srRangeFinder.cpp" />
+    <ClCompile Include="srDyn\srRevoluteJoint.cpp" />
+    <ClCompile Include="srDyn\srSensor.cpp" />
+    <ClCompile Include="srDyn\srSpace.cpp" />
+    <ClCompile Include="srDyn\srSpring.cpp" />
+    <ClCompile Include="srDyn\srState.cpp" />
+    <ClCompile Include="srDyn\srSystem.cpp" />
+    <ClCompile Include="srDyn\srTouchSensor.cpp" />
+    <ClCompile Include="srDyn\srUniversalJoint.cpp" />
+    <ClCompile Include="srDyn\srWeldJoint.cpp" />
+    <ClCompile Include="srg\srg.cpp" />
+    <ClCompile Include="srg\srgBitmap.cpp" />
+    <ClCompile Include="srg\srgCamera.cpp" />
+    <ClCompile Include="srg\srgColor.cpp" />
+    <ClCompile Include="srg\srgFont.cpp" />
+    <ClCompile Include="srg\srgGeometryDraw.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LieGroup\LieGroup.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
