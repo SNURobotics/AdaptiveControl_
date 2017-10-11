@@ -33,6 +33,7 @@ srSpace gSpace;
 
 robot1 Robot;
 AdaptiveControl AdaptiveController; 
+<<<<<<< HEAD
 DynamicsMatrix* DynMatrices;
 //srSystem wam7_robot;
 
@@ -48,6 +49,12 @@ Inertia I6(0.000931067, 0.000498334, 0.000574835, -0.00000148, 0.00000201, 0.000
 Inertia I7(0.0000385, 0.0000388, 0.0000741, 0.000000191, -0.0000000177, 0.0000000362, -0.00000547, 0.0000112, -0.00022211, 0.06864753);
 ////////////////////////////////////
 
+=======
+vector<Inertia*> vpEstimatedInertia; // 초기화 해줘야 함 Eigen::Matrix<double, 6, 6> I_tensor; I.ToArray(I_tensor.data());
+DynamicsMatrix* DynMatrices;
+//srSystem wam7_robot;
+
+>>>>>>> 4a8c99ef818028b339baddf090ebe8c9f717b367
 // >>>>> DECLARE VARIABLES HERE. <<<<<
 // Ground
 Ground gGround;
@@ -127,15 +134,22 @@ void User_Modeling()
 	// >>>>> WRITE YOUR MODELING CODE HERE. >>>>>
 	gSpace.AddSystem(&Robot);
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 4a8c99ef818028b339baddf090ebe8c9f717b367
 	// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 	////- Space
 	// Set simulation time step.
 	gSpace.SetTimestep(0.0005);
 	// Set gravity
+<<<<<<< HEAD
 	gSpace.SetGravity(0.0, 0.0, 9.8);
+=======
+	gSpace.SetGravity(0.0, 0.0, -9.8);
+>>>>>>> 4a8c99ef818028b339baddf090ebe8c9f717b367
 	// Set number of sub-step for rendering
 	gSpace.SetNumberofSubstepForRendering(50);
 }
@@ -143,11 +157,18 @@ void User_Modeling()
 // Simulation Setting.
 void User_SimulationSetting()
 {
+<<<<<<< HEAD
 	
+=======
+    // Set user control loop function.
+    gSpace.SET_USER_CONTROL_FUNCTION(User_CBFunc_ControlLoop);
+
+>>>>>>> 4a8c99ef818028b339baddf090ebe8c9f717b367
     // Initialize for dynamics simulation.
     gSpace.DYN_MODE_PRESTEP();
 	DynMatrices = new DynamicsMatrix(&Robot, &AdaptiveController);
 
+<<<<<<< HEAD
 	///////////////////// erase here //////////////////////////
 
 	I_list.push_back(&I1);
@@ -165,6 +186,8 @@ void User_SimulationSetting()
 	// Set user control loop function.
 	gSpace.SET_USER_CONTROL_FUNCTION(User_CBFunc_ControlLoop);
 
+=======
+>>>>>>> 4a8c99ef818028b339baddf090ebe8c9f717b367
     // Set target space to render.
     // Let srSimpleRenderer know what you want to draw on screen.
     gViewer.SetTarget(&gSpace);
@@ -189,6 +212,7 @@ void User_CBFunc_ControlLoop()
 {
 	//AdaptiveControl.AdaptParameter();
 	//AdaptiveControl.ApplyTorque(); // using updated inertia.
+<<<<<<< HEAD
 	
 	
 	// torque from dynamicMatrix
@@ -206,6 +230,8 @@ void User_CBFunc_ControlLoop()
 	//cout << "DynMatrices->mMatrixG " << endl << DynMatrices->mMatrixG << endl;
 
 
+=======
+>>>>>>> 4a8c99ef818028b339baddf090ebe8c9f717b367
 }
 
 void User_CBFunc_Render(void* pvData)

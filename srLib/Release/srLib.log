@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿  LieGroup.cpp
   Model3DS.cpp
   SimpleRenderer.cpp
@@ -32,3 +33,6 @@
   srgCamera.cpp
   srgGeometryDraw.cpp
   srLib.vcxproj -> D:\adaptivecontrol2\Release\srLib.lib
+=======
+﻿  srLib.vcxproj -> C:\Users\Taeyoon Lee\Documents\Adaptive_control2\Release\srLib.lib
+>>>>>>> 4a8c99ef818028b339baddf090ebe8c9f717b367

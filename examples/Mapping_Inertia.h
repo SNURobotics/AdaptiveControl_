@@ -12,10 +12,10 @@ using namespace Eigen;
 
 namespace Mapping_Inertia
 {
-	//Matrix<double, 4, 4> TensorMat2MomentMat(Matrix<double, 6, 6> G);
-	//Matrix<double, 6, 6> MomentMat2TensorMat(Matrix<double, 4, 4> P);
-	//Matrix<double, 10, 1> TensorMat2TensorVec(Matrix<double, 6, 6> G);
-	//Matrix<double, 6, 6> TensorVec2TensorMat(Matrix<double, 10, 1> phi);
+	MatrixXd TensorMat2MomentMat(MatrixXd G);
+	MatrixXd MomentMat2TensorMat(MatrixXd P);
+	VectorXd TensorMat2TensorVec(MatrixXd G);
+	MatrixXd TensorVec2TensorMat(VectorXd phi);
 
 	pair<SE3, Vector3d> principal_decomp_tensor(Inertia I);
 }
