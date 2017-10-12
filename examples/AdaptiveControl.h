@@ -32,6 +32,7 @@ public:
 		Bregman
 	};
 
+
 	ControlType mControlType; 
 	AdaptationType mAdaptationType;
 	

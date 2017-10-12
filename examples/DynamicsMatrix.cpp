@@ -5,11 +5,11 @@ using namespace Eigen;
 DynamicsMatrix::DynamicsMatrix(robot1* pRobot, AdaptiveControl* pAdaptiveControl) : mpRobot(pRobot), mpAdaptiveControl(pAdaptiveControl)
 {
 	mnJoint = mpRobot->R_Joint_ID::num_joints;
-	//mvpEstimatedInertia = mpAdaptiveControl->mvpEstimatedInertia;
+	mvpEstimatedInertia = mpAdaptiveControl->mvpEstimatedInertia;
 
 
 	// initialize
-	vdot0 = VectorXd::Zero(6); vdot0[5] = -9.8;
+	vdot0 = VectorXd::Zero(6); vdot0[5] = 9.8;
 	qdot = VectorXd::Zero(mnJoint);
 	mMatrixA = MatrixXd::Constant(6 * mnJoint, mnJoint, 0.0);
 	mMatrixL = MatrixXd::Identity(6 * mnJoint, 6 * mnJoint);

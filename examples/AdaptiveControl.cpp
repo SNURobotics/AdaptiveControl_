@@ -1,9 +1,5 @@
 #include "AdaptiveControl.h"
 
-AdaptiveControl::AdaptiveControl()
-{
-
-}
 
 void AdaptiveControl::AdaptParameter()
 {
@@ -12,6 +8,7 @@ void AdaptiveControl::AdaptParameter()
 	case Euclidean:
 		break;
 	case Bregman:
+
 		break;
 	default:
 		break;

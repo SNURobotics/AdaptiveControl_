@@ -1,6 +1,2 @@
 #TargetFrameworkVersion=v4.0:PlatformToolSet=v140:EnableManagedIncrementalBuild=false:VCToolArchitecture=Native32Bit:WindowsTargetPlatformVersion=8.1
-<<<<<<< HEAD
-Release|Win32|D:\adaptivecontrol2\|
-=======
 Release|Win32|C:\Users\Taeyoon Lee\Documents\Adaptive_control2\|
->>>>>>> 4a8c99ef818028b339baddf090ebe8c9f717b367

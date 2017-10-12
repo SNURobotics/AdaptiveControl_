@@ -1,52 +1,8 @@
-<<<<<<< HEAD
 ﻿  DynamicsMatrix.cpp
-  main.cpp
-  Generating code
-  1 of 3510 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-  examples.vcxproj -> D:\adaptivecontrol2\\_EXE\main.exe
-  examples.vcxproj -> D:\adaptivecontrol2\\_EXE\main.pdb (Full PDB)
-=======
-﻿  main.cpp
   코드를 생성하고 있습니다.
-  0 of 2773 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    124 functions had inline decision re-evaluated but remain unchanged
+  23 of 3719 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
+    16 functions were new in current compilation
+    20 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
-srLib.lib(srRevoluteJoint.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srRevoluteJoint.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srObject.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srObject.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srDYN.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srDYN.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(SimpleViewer.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(SimpleViewer.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srSpace.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srSpace.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srCollision.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srCollision.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srEntity.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srEntity.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srGeometryInfo.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srGeometryInfo.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srSystem.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srSystem.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srLink.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srLink.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srJoint.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srJoint.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srState.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srState.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srClosedLoopConstraint.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srClosedLoopConstraint.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srConstraint.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srConstraint.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srISLAND.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srISLAND.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srContactConstraint.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srContactConstraint.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srJointConstraint.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srJointConstraint.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srgGeometryDraw.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srgGeometryDraw.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srgColor.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srgColor.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(SimpleRenderer.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(SimpleRenderer.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srgCamera.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srgCamera.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srIRSensor.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srIRSensor.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srRangeFinder.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srRangeFinder.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srSpring.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srSpring.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srSensor.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srSensor.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srTouchSensor.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srTouchSensor.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(LieGroup.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(LieGroup.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srCollisionPair.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srCollisionPair.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(Model3DS.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(Model3DS.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srgFont.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srgFont.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(Texture.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(Texture.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-srLib.lib(srgBitmap.obj) : warning LNK4099: 'srLib.pdb' PDB를 'srLib.lib(srgBitmap.obj)' 또는 'C:\Users\Taeyoon Lee\Documents\Adaptive_control2\_EXE\srLib.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
   examples.vcxproj -> C:\Users\Taeyoon Lee\Documents\Adaptive_control2\\_EXE\main.exe
   examples.vcxproj -> C:\Users\Taeyoon Lee\Documents\Adaptive_control2\\_EXE\main.pdb (Full PDB)
->>>>>>> 4a8c99ef818028b339baddf090ebe8c9f717b367
