@@ -54,9 +54,10 @@ public:
 	double gamma_Br;
 
 
-	void GetStateFeedbackAndDesiredState(VectorXd q_de_, VectorXd qdot_de_, VectorXd qddot_de_);
+	void ObserveStateFeedbackAndDesiredState(VectorXd q_de_, VectorXd qdot_de_, VectorXd qddot_de_);
 	void AdaptParameter();	// update intertia matrices.
 	void ApplyTorque();		// update torques.
+	double GetLyapunovF();
 
 	AdaptiveControl();
 	AdaptiveControl(robot1* p_robot1, vector<Inertia*> I0, ControlType ControlType, AdaptationType AdaptationType);

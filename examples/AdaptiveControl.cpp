@@ -1,7 +1,7 @@
 #include "AdaptiveControl.h"
 
 
-void AdaptiveControl::GetStateFeedbackAndDesiredState(VectorXd q_de_, VectorXd qdot_de_, VectorXd qddot_de_)
+void AdaptiveControl::ObserveStateFeedbackAndDesiredState(VectorXd q_de_, VectorXd qdot_de_, VectorXd qddot_de_)
 {
 	
 	for (int i = 0; i < mpRobot1->num_joints; i++)
@@ -47,7 +47,7 @@ void AdaptiveControl::ApplyTorque()
 	switch (mControlType)
 	{
 		case PassivityBasedControl:
-			
+			K_PBC = 10.0 * mDynamicsMatrix->M;
 			mTorqueInput = mDynamicsMatrix->M * a + mDynamicsMatrix->C * v + mDynamicsMatrix->N - K_PBC*r;
 			break;
 		case ComputedTorqueControl:
@@ -60,9 +60,33 @@ void AdaptiveControl::ApplyTorque()
 	{
 		mpRobot1->m_joint[j].m_State.m_rCommand = mTorqueInput[j];
 	}
-	cout << "AppliedTorque:" << mTorqueInput << endl;
+	//cout << "AppliedTorque:" << mTorqueInput << endl;
 }
+double AdaptiveControl::GetLyapunovF()
+{
+	double LyapunovF = 0;
+	switch (mControlType)
+	{
+	case PassivityBasedControl:
+		LyapunovF = LyapunovF + 0.5 * r.transpose() * mDynamicsMatrix->M * r + (q - q_de).transpose() * Lambda_PBC*K_PBC * (q - q_de);
+		break;
+	case ComputedTorqueControl:
+		break;
+	default:
+		break;
+	}
+	switch (mAdaptationType)
+	{
+	case Euclidean:
+		break;
+	case Bregman:
+		break;
+	default:
+		break;
+	}
 
+	return LyapunovF;
+}
 AdaptiveControl::AdaptiveControl(robot1* p_robot1, vector<Inertia*> vpEstimatedInertia, ControlType ControlType, AdaptationType AdaptationType)
 	:mpRobot1(p_robot1), mvpEstimatedInertia(vpEstimatedInertia)
 {
@@ -92,8 +116,8 @@ AdaptiveControl::AdaptiveControl(robot1* p_robot1, vector<Inertia*> vpEstimatedI
 	switch (mControlType)
 	{
 	case PassivityBasedControl:
-		Lambda_PBC = 100*MatrixXd::Identity(mpRobot1->num_joints, mpRobot1->num_joints);
-		K_PBC = 20*MatrixXd::Identity(mpRobot1->num_joints, mpRobot1->num_joints);
+		Lambda_PBC = 1*MatrixXd::Identity(mpRobot1->num_joints, mpRobot1->num_joints);
+		K_PBC = 1*MatrixXd::Identity(mpRobot1->num_joints, mpRobot1->num_joints);
 		break;
 	case ComputedTorqueControl:
 		break;
