@@ -1,19 +1,8 @@
-<<<<<<< HEAD
-﻿  코드를 생성하고 있습니다.
-  0 of 4090 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+﻿  AdaptiveControl.cpp
+  코드를 생성하고 있습니다.
+  117 of 5844 functions ( 2.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    154 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   examples.vcxproj -> C:\Users\Taeyoon Lee\Documents\Adaptive_control2\\_EXE\main.exe
   examples.vcxproj -> C:\Users\Taeyoon Lee\Documents\Adaptive_control2\\_EXE\main.pdb (Full PDB)
-=======
-﻿  DynamicsMatrix.cpp
-  main.cpp
-  Generating code
-  80 of 4410 functions ( 1.8%) were compiled, the rest were copied from previous compilation.
-    56 functions were new in current compilation
-    325 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-  examples.vcxproj -> D:\Adpative Control\\_EXE\main.exe
-  examples.vcxproj -> D:\Adpative Control\\_EXE\main.pdb (Full PDB)
->>>>>>> 47e9b0e3f0b514f17e4b7bc9b34b20190fdd1965

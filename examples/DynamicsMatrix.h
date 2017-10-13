@@ -41,6 +41,9 @@ public: // variables
 	MatrixXd N;
 	MatrixXd mMatrixY;
 
+	MatrixXd M_true; // true Mass Matrix
+	MatrixXd mMatrixG_true; // true G Matrix
+
 public: // functions
 
 	DynamicsMatrix(robot1* pRobot, AdaptiveControl* pAdaptiveControl);

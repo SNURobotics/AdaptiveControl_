@@ -25,6 +25,9 @@ DynamicsMatrix::DynamicsMatrix(robot1* pRobot, AdaptiveControl* pAdaptiveControl
 	N = MatrixXd::Constant(mnJoint, 1, 0.0);
 	mMatrixY = MatrixXd::Constant(mnJoint, 10 * mnJoint, 0.0);
 
+	M_true = MatrixXd::Constant(mnJoint, mnJoint, 0.0);
+	mMatrixG_true = MatrixXd::Constant(6 * mnJoint, 6 * mnJoint, 0.0);
+
 	mvCurrentSE3.resize(mnJoint + 1); // # of link = # of joint + 1. (base link)
 	mvCurrentV.resize(mnJoint + 1);
 	mvA.resize(mnJoint);
@@ -142,6 +145,8 @@ void DynamicsMatrix::ComputeG()
 		MatrixXd tmp(6, 6);
 		mvpEstimatedInertia[i]->ToArray(tmp.data());
 		mMatrixG.block<6, 6>(6 * i, 6 * i) = tmp;
+		mpRobot->m_link[i + 1].m_Inertia.ToArray(tmp.data());
+		mMatrixG_true.block<6, 6>(6 * i, 6 * i) = tmp;
 	}
 }
 
@@ -195,6 +200,7 @@ void DynamicsMatrix::ComputeVdot_base()
 void DynamicsMatrix::MassMatrix()
 {
 	M = mMatrixA.transpose() * mMatrixL.transpose() * mMatrixG * mMatrixL * mMatrixA;
+	M_true = mMatrixA.transpose() * mMatrixL.transpose() * mMatrixG_true * mMatrixL * mMatrixA;
 }
 
 void DynamicsMatrix::CoriolisMatrix()
@@ -224,7 +230,16 @@ void DynamicsMatrix::ComputeY()
 		RowVectorXd e_i_t = RowVectorXd::Zero(mnJoint); e_i_t[i] = 1.0;
 		MatrixXd LAe_t = e_i_t*mMatrixA.transpose()*mMatrixL.transpose();
 		
-		TempMat = mMatrixL * ((mMatrixA * qddot + mMatrix_adA * mMatrixGamma * mMatrixL * mMatrixA * qdot + mVdot_base) * LAe_t + mMatrixA * qdot * LAe_t * mMatrix_adv_t);
+		switch (mpAdaptiveControl->mControlType)
+		{
+			case AdaptiveControl::PassivityBasedControl:
+				TempMat = mMatrixL * ((mMatrixA * mpAdaptiveControl->a + mMatrix_adA * mMatrixGamma * mMatrixL * mMatrixA * mpAdaptiveControl->v + mVdot_base) * LAe_t + mMatrixA * mpAdaptiveControl->v * LAe_t * mMatrix_adv_t);
+				break;
+			case AdaptiveControl::ComputedTorqueControl:
+				TempMat = mMatrixL * ((mMatrixA * qddot + mMatrix_adA * mMatrixGamma * mMatrixL * mMatrixA * qdot + mVdot_base) * LAe_t + mMatrixA * qdot * LAe_t * mMatrix_adv_t);
+				break;
+		}
+		
 		TempMat_t = TempMat.transpose();
 		TempMat = (TempMat + TempMat_t) / 2.0;
 

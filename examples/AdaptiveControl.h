@@ -8,6 +8,8 @@
 #include "robot1.h"
 #include "DynamicsMatrix.h"
 
+using namespace Mapping_Inertia;
+
 class DynamicsMatrix;
 
 class AdaptiveControl
@@ -16,6 +18,7 @@ public:
 
 	vector<Inertia*> mvpEstimatedInertia;
 	robot1* mpRobot1;
+	double time_step;
 	//States
 	VectorXd q;
 	VectorXd qdot;
@@ -26,6 +29,9 @@ public:
 	VectorXd a;
 	VectorXd v;
 	VectorXd r;
+	VectorXd phi_current;
+	vector<MatrixXd> P_current;
+	VectorXd phi_true;
 
 	VectorXd mTorqueInput;
 	DynamicsMatrix* mDynamicsMatrix;
@@ -49,6 +55,11 @@ public:
 	// PBC gains
 	MatrixXd Lambda_PBC;
 	MatrixXd K_PBC;
+	double lambda_c_PBC;
+
+	//Euclidean gains
+	MatrixXd Sigma_Euc;
+	MatrixXd Sigma_Euc_inv;
 
 	//Bregman gains
 	double gamma_Br;
@@ -60,6 +71,6 @@ public:
 	double GetLyapunovF();
 
 	AdaptiveControl();
-	AdaptiveControl(robot1* p_robot1, vector<Inertia*> I0, ControlType ControlType, AdaptationType AdaptationType);
+	AdaptiveControl(robot1* p_robot1, SR_real time_step_, vector<Inertia*> I0, ControlType ControlType, AdaptationType AdaptationType);
 	~AdaptiveControl();
 };
