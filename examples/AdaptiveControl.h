@@ -13,11 +13,21 @@ class DynamicsMatrix;
 class AdaptiveControl
 {
 public:
-	AdaptiveControl();
 
 	vector<Inertia*> mvpEstimatedInertia;
 	robot1* mpRobot1;
-	SR_real* mpTorqueInput;
+	//States
+	VectorXd q;
+	VectorXd qdot;
+	VectorXd qddot;
+	VectorXd q_de;
+	VectorXd qdot_de;
+	VectorXd qddot_de;
+	VectorXd a;
+	VectorXd v;
+	VectorXd r;
+
+	VectorXd mTorqueInput;
 	DynamicsMatrix* mDynamicsMatrix;
 	// SR_real mNoise;
 
@@ -36,9 +46,19 @@ public:
 	ControlType mControlType; 
 	AdaptationType mAdaptationType;
 	
+	// PBC gains
+	MatrixXd Lambda_PBC;
+	MatrixXd K_PBC;
+
+	//Bregman gains
+	double gamma_Br;
+
+
+	void GetStateFeedbackAndDesiredState(VectorXd q_de_, VectorXd qdot_de_, VectorXd qddot_de_);
 	void AdaptParameter();	// update intertia matrices.
 	void ApplyTorque();		// update torques.
 
+	AdaptiveControl();
 	AdaptiveControl(robot1* p_robot1, vector<Inertia*> I0, ControlType ControlType, AdaptationType AdaptationType);
 	~AdaptiveControl();
 };

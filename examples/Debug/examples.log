@@ -1,3 +1,55 @@
-﻿  main.cpp
-  examples.vcxproj -> E:\Adaptive control\srLib_vs2015\\_EXE\main.exe
-  examples.vcxproj -> E:\Adaptive control\srLib_vs2015\\_EXE\main.pdb (Full PDB)
+﻿  WAM7.cpp
+c:\users\taeyoon lee\documents\adaptive_control2\examples\wam7.cpp(27): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  robot1example.cpp
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(92): error C2660: 'robot1::buildRobot1': 함수는 1개의 매개 변수를 사용하지 않습니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(93): error C2660: 'robot1::buildRobot1': 함수는 1개의 매개 변수를 사용하지 않습니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(100): error C2039: 'link': 'robot1'의 멤버가 아닙니다.
+  c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1.h(13): note: 'robot1' 선언을 참조하십시오.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(100): error C2228: '.AddSensor' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(193): error C2039: 'wheelJoint': 'robot1'의 멤버가 아닙니다.
+  c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1.h(13): note: 'robot1' 선언을 참조하십시오.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(193): error C2228: '.m_State' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(193): error C2228: '.m_rCommand' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(195): error C2039: 'wheelJoint': 'robot1'의 멤버가 아닙니다.
+  c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1.h(13): note: 'robot1' 선언을 참조하십시오.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(195): error C2228: '.m_State' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(195): error C2228: '.m_rCommand' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(200): error C2039: 'wheelJoint': 'robot1'의 멤버가 아닙니다.
+  c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1.h(13): note: 'robot1' 선언을 참조하십시오.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(200): error C2228: '.m_State' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(200): error C2228: '.m_rCommand' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(202): error C2039: 'wheelJoint': 'robot1'의 멤버가 아닙니다.
+  c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1.h(13): note: 'robot1' 선언을 참조하십시오.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(202): error C2228: '.m_State' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(202): error C2228: '.m_rCommand' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(207): error C2039: 'wheelJoint': 'robot1'의 멤버가 아닙니다.
+  c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1.h(13): note: 'robot1' 선언을 참조하십시오.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(207): error C2228: '.m_State' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(207): error C2228: '.m_rCommand' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(209): error C2039: 'wheelJoint': 'robot1'의 멤버가 아닙니다.
+  c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1.h(13): note: 'robot1' 선언을 참조하십시오.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(209): error C2228: '.m_State' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(209): error C2228: '.m_rCommand' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(214): error C2039: 'wheelJoint': 'robot1'의 멤버가 아닙니다.
+  c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1.h(13): note: 'robot1' 선언을 참조하십시오.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(214): error C2228: '.m_State' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(214): error C2228: '.m_rCommand' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(216): error C2039: 'wheelJoint': 'robot1'의 멤버가 아닙니다.
+  c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1.h(13): note: 'robot1' 선언을 참조하십시오.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(216): error C2228: '.m_State' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(216): error C2228: '.m_rCommand' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(221): error C2039: 'wheelJoint': 'robot1'의 멤버가 아닙니다.
+  c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1.h(13): note: 'robot1' 선언을 참조하십시오.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(221): error C2228: '.m_State' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(221): error C2228: '.m_rCommand' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(223): error C2039: 'wheelJoint': 'robot1'의 멤버가 아닙니다.
+  c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1.h(13): note: 'robot1' 선언을 참조하십시오.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(223): error C2228: '.m_State' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1example.cpp(223): error C2228: '.m_rCommand' 왼쪽에는 클래스/구조체/공용 구조체가 있어야 합니다.
+  robot1.cpp
+c:\users\taeyoon lee\documents\adaptive_control2\examples\robot1.cpp(42): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  Mapping_Inertia.cpp
+  HelloWorld.cpp
+  DynamicsMatrix.cpp
+  AdaptiveControl.cpp
+  코드를 생성하고 있습니다...

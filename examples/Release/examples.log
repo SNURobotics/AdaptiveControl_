@@ -1,8 +1,8 @@
-﻿  DynamicsMatrix.cpp
+﻿  main.cpp
   코드를 생성하고 있습니다.
-  23 of 3719 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
-    16 functions were new in current compilation
-    20 functions had inline decision re-evaluated but remain unchanged
+  471 of 4116 functions (11.4%) were compiled, the rest were copied from previous compilation.
+    444 functions were new in current compilation
+    287 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   examples.vcxproj -> C:\Users\Taeyoon Lee\Documents\Adaptive_control2\\_EXE\main.exe
   examples.vcxproj -> C:\Users\Taeyoon Lee\Documents\Adaptive_control2\\_EXE\main.pdb (Full PDB)

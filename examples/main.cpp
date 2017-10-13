@@ -32,7 +32,7 @@ srSimpleViewer& gViewer = srSimpleViewer::GetInstance();
 srSpace gSpace;
 
 robot1 Robot;
-AdaptiveControl AdaptiveController; 
+AdaptiveControl* AdaptiveController; 
 DynamicsMatrix* DynMatrices;
 //srSystem wam7_robot;
 
@@ -131,6 +131,7 @@ void User_Modeling()
 	////- Space
 	// Set simulation time step.
 	gSpace.SetTimestep(0.0005);
+	//gSpace.SetTimestep(0.0000005);
 	// Set gravity
 	gSpace.SetGravity(0.0, 0.0, -9.8);
 
@@ -153,9 +154,11 @@ void User_SimulationSetting()
 	I_list.push_back(&I5);
 	I_list.push_back(&I6);
 	I_list.push_back(&I7);
-	AdaptiveControl AdaptiveController(&Robot, I_list, AdaptiveControl::ControlType::PassivityBasedControl, AdaptiveControl::AdaptationType::Bregman);
-	DynMatrices = new DynamicsMatrix(&Robot, &AdaptiveController);
-	
+
+	AdaptiveController = new AdaptiveControl(&Robot, I_list, AdaptiveControl::ControlType::PassivityBasedControl, AdaptiveControl::AdaptationType::Bregman);
+	DynMatrices = new DynamicsMatrix(&Robot, AdaptiveController);
+	AdaptiveController->mDynamicsMatrix = DynMatrices;
+
 	///////////////////// erase here //////////////////////////
 
 	//DynMatrices->mvpEstimatedInertia = I_list;
@@ -187,50 +190,86 @@ void User_SimulationSetting()
 // >>>>> WRITE YOUR CONTROL CODE HERE. <<<<<
 void User_CBFunc_ControlLoop()
 {
-	//AdaptiveControl.AdaptParameter(q_de, qdot_de, qddot_de);
-	//AdaptiveControl.ApplyTorque(q_de, qdot_de, qddot_de); // using updated inertia.
+	//Set Reference Trajectory
 	double w = 1;
-	double a = SR_PI / 3;
+	double A = SR_PI / 3;
 	double k1 = 100;
 	double k0 = k1*k1/4;
 	VectorXd q_de = VectorXd::Zero(7);
 	VectorXd qdot_de = VectorXd::Zero(7);
 	VectorXd qddot_de = VectorXd::Zero(7);
-	MatrixXd K0 = k0*MatrixXd::Identity(7, 7);
-	MatrixXd K1 = k1*MatrixXd::Identity(7, 7);
-	VectorXd u = VectorXd::Zero(7);
-	
-
-	// torque from dynamicMatrix
+	for (int j = 0; j < 7; j++)	
+	{
+		q_de[j] = A*sin(w*gSpace.m_Simulation_Time);
+		qdot_de[j] = A*w*cos(w*gSpace.m_Simulation_Time);
+		qddot_de[j] = -A*w*w*sin(w*gSpace.m_Simulation_Time);
+		//q_de[j] = A*w*gSpace.m_Simulation_Time;
+		//qdot_de[j] = A*w;
+		//qddot_de[j] = 0.0;
+	}
 	DynMatrices->UpdateMatrices();
-
-	//int i = 3;
+	//AdaptiveController->GetStateFeedbackAndDesiredState(q_de, qdot_de, qddot_de);
+	////AdaptiveControl.AdaptParameter();
+	//AdaptiveController->ApplyTorque(); // using updated inertia.
 	VectorXd q = VectorXd::Zero(7);
 	VectorXd qdot = VectorXd::Zero(7);
 	VectorXd qddot = VectorXd::Zero(7);
-	for (int j = 0; j < 7; j++)	
+	VectorXd a = VectorXd::Zero(7);
+	VectorXd v = VectorXd::Zero(7);
+	VectorXd r = VectorXd::Zero(7);
+	MatrixXd Lambda_PBC = 1 * MatrixXd::Identity(7, 7);
+	MatrixXd K_PBC = 10 * DynMatrices->M;
+	for (int i = 0; i < 7; i++)
 	{
-		q_de[j] = a*sin(w*gSpace.m_Simulation_Time);
-		qdot_de[j] = a*w*cos(w*gSpace.m_Simulation_Time);
-		qddot_de[j] = -a*w*w*sin(w*gSpace.m_Simulation_Time);
-		//q_de[j] = a*w*gSpace.m_Simulation_Time;
-		//qdot_de[j] = a*w;
-		//qddot_de[j] = 0;
-
-		q[j] = Robot.m_joint[j].GetRevoluteJointState().m_rValue[0];
-		qdot[j] = Robot.m_joint[j].GetRevoluteJointState().m_rValue[1];
-		qddot[j] = Robot.m_joint[j].GetRevoluteJointState().m_rValue[2];
+		q[i] = Robot.m_joint[i].GetRevoluteJointState().m_rValue[0];
+		qdot[i] = Robot.m_joint[i].GetRevoluteJointState().m_rValue[1];
+		qddot[i] = Robot.m_joint[i].GetRevoluteJointState().m_rValue[2];
 	}
-	u = DynMatrices->M * (qddot_de - K0*(q - q_de) - K1*(qdot - qdot_de)) + DynMatrices->C * qdot + DynMatrices->N;
+	v = qdot_de - Lambda_PBC*(q - q_de);
+	a = qddot_de - Lambda_PBC*(qdot - qdot_de);
+	r = qdot - v;
+	VectorXd u = VectorXd::Zero(7);
+	u = DynMatrices->M * a + DynMatrices->C * v + DynMatrices->N - K_PBC*r;
 	for (int j = 0; j < 7 ;j++)
 	{
 		Robot.m_joint[j].m_State.m_rCommand = u[j];
 	}
-	
-	//cout << i + 1 << "th joint actual torque: " << Robot.m_joint[i].GetRevoluteJointState().m_rValue[3] << endl;
-	cout << "joint actual torque: " << endl << (DynMatrices->M * qddot + DynMatrices->C * qdot + DynMatrices->N - u).norm() << endl;
-	//cout << "DynMatrices->mMatrixG " << endl << DynMatrices->mMatrixG << endl;
+	//MatrixXd K0 = k0*MatrixXd::Identity(7, 7);
+	//MatrixXd K1 = k1*MatrixXd::Identity(7, 7);
+	//VectorXd u = VectorXd::Zero(7);
+	//
+
+	//// torque from dynamicMatrix
+	//DynMatrices->UpdateMatrices();
+
+	////int i = 3;
+	//VectorXd q = VectorXd::Zero(7);
+	//VectorXd qdot = VectorXd::Zero(7);
+	//VectorXd qddot = VectorXd::Zero(7);
+	//for (int j = 0; j < 7; j++)	
+	//{
+	//	q_de[j] = a*sin(w*gSpace.m_Simulation_Time);
+	//	qdot_de[j] = a*w*cos(w*gSpace.m_Simulation_Time);
+	//	qddot_de[j] = -a*w*w*sin(w*gSpace.m_Simulation_Time);
+	//	//q_de[j] = a*w*gSpace.m_Simulation_Time;
+	//	//qdot_de[j] = a*w;
+	//	//qddot_de[j] = 0;
+
+	//	q[j] = Robot.m_joint[j].GetRevoluteJointState().m_rValue[0];
+	//	qdot[j] = Robot.m_joint[j].GetRevoluteJointState().m_rValue[1];
+	//	qddot[j] = Robot.m_joint[j].GetRevoluteJointState().m_rValue[2];
+	//}
+	//u = DynMatrices->M * (qddot_de - K0*(q - q_de) - K1*(qdot - qdot_de)) + DynMatrices->C * qdot + DynMatrices->N;
+	//for (int j = 0; j < 7 ;j++)
+	//{
+	//	Robot.m_joint[j].m_State.m_rCommand = u[j];
+	//}
+	//
+	////cout << i + 1 << "th joint actual torque: " << Robot.m_joint[i].GetRevoluteJointState().m_rValue[3] << endl;
+	//cout << "joint actual torque: " << endl << (DynMatrices->M * qddot + DynMatrices->C * qdot + DynMatrices->N - u).norm() << endl;
+	////cout << "DynMatrices->mMatrixG " << endl << DynMatrices->mMatrixG << endl;
 	//cout << "joint error:" << (q-q_de).norm() << endl;
+	cout << "Lyapunov Function:" << 0.5 * r.transpose() * DynMatrices->M * r + (q-q_de).transpose() * Lambda_PBC*K_PBC * (q-q_de) << endl;
 }
 
 void User_CBFunc_Render(void* pvData)
