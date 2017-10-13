@@ -208,6 +208,7 @@ void User_CBFunc_ControlLoop()
 		//qddot_de[j] = 0.0;
 	}
 	DynMatrices->UpdateMatrices();
+
 	//AdaptiveController->GetStateFeedbackAndDesiredState(q_de, qdot_de, qddot_de);
 	////AdaptiveControl.AdaptParameter();
 	//AdaptiveController->ApplyTorque(); // using updated inertia.
@@ -234,6 +235,22 @@ void User_CBFunc_ControlLoop()
 	{
 		Robot.m_joint[j].m_State.m_rCommand = u[j];
 	}
+
+	VectorXd phi(DynMatrices->mnJoint * 10, 1);
+	for (int i = 0; i < DynMatrices->mnJoint; i++)
+	{
+		MatrixXd G_i(6, 6);
+		VectorXd phi_i(10, 1);
+		I_list[i]->ToArray(G_i.data());
+		phi_i = TensorMat2TensorVec(G_i);
+		phi.block<10, 1>(10 * i, 0) = phi_i;
+
+		MatrixXd tempvel(6, 1);  DynMatrices->mvCurrentV[i].ToArray(tempvel.data());
+		//cout << "vel error: " << endl << tempvel - (DynMatrices->mMatrixL * DynMatrices->mMatrixA * qdot).block<6,1>(6*i,0) << endl;
+	}
+	cout << "DynMatrices->mMatrixY * phi - u= " << endl << DynMatrices->mMatrixY * phi - (DynMatrices->M * qddot + DynMatrices->C * qdot + DynMatrices->N) << endl; // DynMatrices->mMatrixY * phi - u
+
+
 	//MatrixXd K0 = k0*MatrixXd::Identity(7, 7);
 	//MatrixXd K1 = k1*MatrixXd::Identity(7, 7);
 	//VectorXd u = VectorXd::Zero(7);
@@ -269,7 +286,7 @@ void User_CBFunc_ControlLoop()
 	//cout << "joint actual torque: " << endl << (DynMatrices->M * qddot + DynMatrices->C * qdot + DynMatrices->N - u).norm() << endl;
 	////cout << "DynMatrices->mMatrixG " << endl << DynMatrices->mMatrixG << endl;
 	//cout << "joint error:" << (q-q_de).norm() << endl;
-	cout << "Lyapunov Function:" << 0.5 * r.transpose() * DynMatrices->M * r + (q-q_de).transpose() * Lambda_PBC*K_PBC * (q-q_de) << endl;
+	//cout << "Lyapunov Function:" << 0.5 * r.transpose() * DynMatrices->M * r + (q-q_de).transpose() * Lambda_PBC*K_PBC * (q-q_de) << endl;
 }
 
 void User_CBFunc_Render(void* pvData)

@@ -23,16 +23,17 @@ DynamicsMatrix::DynamicsMatrix(robot1* pRobot, AdaptiveControl* pAdaptiveControl
 	M = MatrixXd::Constant(mnJoint, mnJoint, 0.0);
 	C = MatrixXd::Constant(mnJoint, mnJoint, 0.0);
 	N = MatrixXd::Constant(mnJoint, 1, 0.0);
+	mMatrixY = MatrixXd::Constant(mnJoint, 10 * mnJoint, 0.0);
 
-	mvCurrentSE3.resize(mnJoint+1); // # of link = # of joint + 1. (base link)
+	mvCurrentSE3.resize(mnJoint + 1); // # of link = # of joint + 1. (base link)
 	mvCurrentV.resize(mnJoint + 1);
-	mvA.resize(mnJoint + 1);
+	mvA.resize(mnJoint);
 
 	// A matrix
 	for (int i = 0; i < mnJoint; i++)
 	{
 		Vec3 JointAxis = mpRobot->m_link[i].m_Frame.GetZ(); // i-th joint axis = z-axis of (i-1)-th link frame
-		MatrixXd w(3,1); w << JointAxis[0], JointAxis[1], JointAxis[2];
+		MatrixXd w(3, 1); w << JointAxis[0], JointAxis[1], JointAxis[2];
 		Vector3d v = CrossMatrix(mpRobot->m_link[i].m_Frame.GetPosition()) * w;
 		SE3 InvT = SE3() / mpRobot->m_link[i + 1].m_Frame;
 
@@ -48,7 +49,7 @@ void DynamicsMatrix::UpdateMatrices()
 {
 
 	// update mvCurrentSE3
-	for (int i = 0; i < mnJoint+1; i++) // # of link = # of joint + 1. (base link)
+	for (int i = 0; i < mnJoint + 1; i++) // # of link = # of joint + 1. (base link)
 	{
 		mvCurrentSE3[i] = mpRobot->m_link[i].m_Frame;
 	}
@@ -58,7 +59,7 @@ void DynamicsMatrix::UpdateMatrices()
 	{
 		mvCurrentV[i] = mpRobot->m_link[i].m_Vel; // i-th velocity w.r.t to i-th link frame. (generalized body vel.) 
 	}
-	
+
 	// update qdot
 	for (int i = 0; i < mnJoint; i++)
 	{
@@ -70,13 +71,13 @@ void DynamicsMatrix::UpdateMatrices()
 	ComputeGamma();
 	ComputeCbar();
 	Compute_adA();
-	Compute_adv_t();
+	Compute_adv_t(); // L, A, qdot must be computed before adv_t.
 	ComputeVdot_base();
 
 	MassMatrix();
 	CoriolisMatrix();
 	GravitationalVector();
-
+	ComputeY();
 }
 
 MatrixXd DynamicsMatrix::BigAd(SE3 T)
@@ -94,14 +95,12 @@ MatrixXd DynamicsMatrix::BigAd(SE3 T)
 	return matBigAd;
 }
 
-MatrixXd DynamicsMatrix::SmallAd(se3 V)
+MatrixXd DynamicsMatrix::SmallAd(VectorXd se3vector)
 {
 	MatrixXd matSmallAd(6, 6);
 	matSmallAd = MatrixXd::Constant(6, 6, 0.0);
 
-	double array[6];
-	V.ToArray(array);
-	Vec3 w(array[0], array[1], array[2]), v(array[3], array[4], array[5]);
+	Vec3 w(se3vector[0], se3vector[1], se3vector[2]), v(se3vector[3], se3vector[4], se3vector[5]);
 
 	matSmallAd.block<3, 3>(0, 0) = CrossMatrix(w);
 	matSmallAd.block<3, 3>(3, 0) = CrossMatrix(v);
@@ -157,8 +156,10 @@ void DynamicsMatrix::ComputeGamma()
 void DynamicsMatrix::ComputeCbar()
 {
 	MatrixXd tmp(6 * mnJoint, 6 * mnJoint);
+	MatrixXd tmp_t(6 * mnJoint, 6 * mnJoint);
 	tmp = mMatrix_adv_t * mMatrixG;
-	mMatrixCbar = tmp - tmp.transpose();
+	tmp_t = tmp.transpose();
+	mMatrixCbar = tmp - tmp_t;
 }
 
 
@@ -167,16 +168,21 @@ void DynamicsMatrix::Compute_adA()
 	for (int i = 0; i < mnJoint; i++)
 	{
 		se3 A_i = qdot[i] * mvA[i];
-		mMatrix_adA.block<6, 6>(6 * i, 6 * i) = -SmallAd(A_i);
+		VectorXd A = VectorXd::Zero(6);
+		A_i.ToArray(A.data());
+		mMatrix_adA.block<6, 6>(6 * i, 6 * i) = -SmallAd(A);
 	}
 }
 
 void DynamicsMatrix::Compute_adv_t()
 {
+	MatrixXd CurrentV = mMatrixL * mMatrixA * qdot;
 	for (int i = 0; i < mnJoint; i++)
 	{
 		MatrixXd ad_v;
-		ad_v = SmallAd(mvCurrentV[i+1]);
+		VectorXd CurrentV_i = CurrentV.block<6,1>(6*i,0);
+		
+		ad_v = SmallAd(CurrentV_i);
 		mMatrix_adv_t.block<6, 6>(6 * i, 6 * i) = -ad_v.transpose();
 	}
 }
@@ -201,4 +207,50 @@ void DynamicsMatrix::GravitationalVector()
 	N = mMatrixA.transpose() * mMatrixL.transpose() * mMatrixG * mMatrixL * mVdot_base;
 }
 
+void DynamicsMatrix::ComputeY()
+{
+	MatrixXd TempMat(6 * mnJoint, 6 * mnJoint);
+	MatrixXd TempMat_t(6 * mnJoint, 6 * mnJoint);
+	VectorXd TempVec = VectorXd::Zero(10 * mnJoint);
 	
+	VectorXd qddot = VectorXd::Zero(mnJoint);
+	for (int i = 0; i < mnJoint; i++)
+	{
+		qddot[i] = mpRobot->m_joint[i].GetRevoluteJointState().m_rValue[2];
+	}
+
+	for (int i = 0; i < mnJoint; i++)
+	{
+		RowVectorXd e_i_t = RowVectorXd::Zero(mnJoint); e_i_t[i] = 1.0;
+		MatrixXd LAe_t = e_i_t*mMatrixA.transpose()*mMatrixL.transpose();
+		
+		TempMat = mMatrixL * ((mMatrixA * qddot + mMatrix_adA * mMatrixGamma * mMatrixL * mMatrixA * qdot + mVdot_base) * LAe_t + mMatrixA * qdot * LAe_t * mMatrix_adv_t);
+		TempMat_t = TempMat.transpose();
+		TempMat = (TempMat + TempMat_t) / 2.0;
+
+		for (int j = 0; j < mnJoint; j++)
+		{
+			// indexes for conversion from G to phi
+			int index_i[] = { 0,1,2,0,0,1,1,0,0,3 };
+			int index_j[] = { 0,1,2,1,2,2,5,5,4,3 };
+
+			// conversion of each block
+			for (int k = 0; k < 10; k++)
+			{
+				if (k < 3)
+					TempVec[10 * j + k] = TempMat(6 * j + index_i[k], 6 * j + index_j[k]);
+				else if (k < 6)
+					TempVec[10 * j + k] = 2.0 * TempMat(6 * j + index_i[k], 6 * j + index_j[k]);
+				else if (k < 9)
+					TempVec[10 * j + k] = 2.0 * (TempMat(6 * j + index_i[k], 6 * j + index_j[k]) - TempMat(6 * j + index_j[k] - 3, 6 * j + index_i[k]+3));
+				else
+					TempVec[10 * j + k] = TempMat(6 * j + index_i[k], 6 * j + index_j[k]) + TempMat(6 * j + index_i[k] + 1, 6 * j + index_j[k] + 1) + TempMat(6 * j + index_i[k] + 2, 6 * j + index_j[k] + 2);
+
+				// revert the sign (skew-symmetricity)
+				if (k == 6 || k == 8)
+					TempVec[10 * j + k] = -TempVec[10 * j + k];
+			}
+		}
+		mMatrixY.row(i) = TempVec;
+	}
+}

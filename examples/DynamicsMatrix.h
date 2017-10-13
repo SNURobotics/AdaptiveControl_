@@ -34,11 +34,12 @@ public: // variables
 	MatrixXd mVdot_base;//
 	MatrixXd mMatrix_adA;//
 	MatrixXd mMatrix_adv_t;//
-	//MatrixXd MatrixY;
+	
 
 	MatrixXd M;
 	MatrixXd C;
 	MatrixXd N;
+	MatrixXd mMatrixY;
 
 public: // functions
 
@@ -46,7 +47,7 @@ public: // functions
 
 	void UpdateMatrices();
 	MatrixXd BigAd(SE3 T);
-	MatrixXd SmallAd(se3 V);
+	MatrixXd SmallAd(VectorXd se3vector);
 	MatrixXd CrossMatrix(Vec3 w);
 	// MatrixXd ComputeA(); // A is fixed.
 	void ComputeL();
@@ -60,6 +61,7 @@ public: // functions
 	void MassMatrix();
 	void CoriolisMatrix();
 	void GravitationalVector();
+	void ComputeY();
 
 private:
 	
