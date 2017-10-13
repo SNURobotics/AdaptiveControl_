@@ -208,6 +208,7 @@ void User_CBFunc_ControlLoop()
 		//qddot_de[j] = 0.0;
 	}
 	DynMatrices->UpdateMatrices();
+<<<<<<< HEAD
 	AdaptiveController->ObserveStateFeedbackAndDesiredState(q_de, qdot_de, qddot_de);
 	//AdaptiveControl.AdaptParameter();
 	AdaptiveController->ApplyTorque(); // using updated inertia.
@@ -235,6 +236,50 @@ void User_CBFunc_ControlLoop()
 	//{
 	//	Robot.m_joint[j].m_State.m_rCommand = u[j];
 	//}
+=======
+
+	//AdaptiveController->GetStateFeedbackAndDesiredState(q_de, qdot_de, qddot_de);
+	////AdaptiveControl.AdaptParameter();
+	//AdaptiveController->ApplyTorque(); // using updated inertia.
+	VectorXd q = VectorXd::Zero(7);
+	VectorXd qdot = VectorXd::Zero(7);
+	VectorXd qddot = VectorXd::Zero(7);
+	VectorXd a = VectorXd::Zero(7);
+	VectorXd v = VectorXd::Zero(7);
+	VectorXd r = VectorXd::Zero(7);
+	MatrixXd Lambda_PBC = 1 * MatrixXd::Identity(7, 7);
+	MatrixXd K_PBC = 10 * DynMatrices->M;
+	for (int i = 0; i < 7; i++)
+	{
+		q[i] = Robot.m_joint[i].GetRevoluteJointState().m_rValue[0];
+		qdot[i] = Robot.m_joint[i].GetRevoluteJointState().m_rValue[1];
+		qddot[i] = Robot.m_joint[i].GetRevoluteJointState().m_rValue[2];
+	}
+	v = qdot_de - Lambda_PBC*(q - q_de);
+	a = qddot_de - Lambda_PBC*(qdot - qdot_de);
+	r = qdot - v;
+	VectorXd u = VectorXd::Zero(7);
+	u = DynMatrices->M * a + DynMatrices->C * v + DynMatrices->N - K_PBC*r;
+	for (int j = 0; j < 7 ;j++)
+	{
+		Robot.m_joint[j].m_State.m_rCommand = u[j];
+	}
+
+	VectorXd phi(DynMatrices->mnJoint * 10, 1);
+	for (int i = 0; i < DynMatrices->mnJoint; i++)
+	{
+		MatrixXd G_i(6, 6);
+		VectorXd phi_i(10, 1);
+		I_list[i]->ToArray(G_i.data());
+		phi_i = TensorMat2TensorVec(G_i);
+		phi.block<10, 1>(10 * i, 0) = phi_i;
+
+		MatrixXd tempvel(6, 1);  DynMatrices->mvCurrentV[i].ToArray(tempvel.data());
+		//cout << "vel error: " << endl << tempvel - (DynMatrices->mMatrixL * DynMatrices->mMatrixA * qdot).block<6,1>(6*i,0) << endl;
+	}
+	cout << "DynMatrices->mMatrixY * phi - u= " << endl << DynMatrices->mMatrixY * phi - (DynMatrices->M * qddot + DynMatrices->C * qdot + DynMatrices->N) << endl; // DynMatrices->mMatrixY * phi - u
+
+>>>>>>> 47e9b0e3f0b514f17e4b7bc9b34b20190fdd1965
 
 	//MatrixXd K0 = k0*MatrixXd::Identity(7, 7);
 	//MatrixXd K1 = k1*MatrixXd::Identity(7, 7);
@@ -272,8 +317,11 @@ void User_CBFunc_ControlLoop()
 	////cout << "DynMatrices->mMatrixG " << endl << DynMatrices->mMatrixG << endl;
 	//cout << "joint error:" << (q-q_de).norm() << endl;
 	//cout << "Lyapunov Function:" << 0.5 * r.transpose() * DynMatrices->M * r + (q-q_de).transpose() * Lambda_PBC*K_PBC * (q-q_de) << endl;
+<<<<<<< HEAD
 	cout << "Lyapunov Function:" << AdaptiveController->GetLyapunovF() << endl;
 		//0.5 * r.transpose() * DynMatrices->M * r + (q - q_de).transpose() * Lambda_PBC*K_PBC * (q - q_de) << endl;
+=======
+>>>>>>> 47e9b0e3f0b514f17e4b7bc9b34b20190fdd1965
 }
 
 void User_CBFunc_Render(void* pvData)
