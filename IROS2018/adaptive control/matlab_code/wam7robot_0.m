@@ -150,14 +150,14 @@ end
 robot.Tendeffector = [eye(3),[0;0;0];zeros(1,3),1];
 robot.link(robot.nDOF).Ttool = robot.Tendeffector;
 %% add noise
-% m_noise = zeros(robot.nDOF,1);
-% R_noise = zeros(robot.nDOF, 1);
-% for num = 1:robot.nDOF
-%     m(num) = robot.link(num).J(4,4)/3;
-%     R(num) = 0.05;
-%     robot.link(num).J = robot.link(num).J*0.9 + + [((2/5) * m(num) * R(num)^2/5)* eye(3,3), zeros(3,3);zeros(3,3), m(num)*eye(3,3)]; 
-% 
-% end
+m_noise = zeros(robot.nDOF,1);
+R_noise = zeros(robot.nDOF, 1);
+for num = 1:robot.nDOF
+    m(num) = robot.link(num).J(4,4)/3;
+    R(num) = 0.05;
+    robot.link(num).J = robot.link(num).J*0.9 + [((2/5) * m(num) * R(num)^2)* eye(3,3), zeros(3,3);zeros(3,3), m(num)*eye(3,3)]; 
+
+end
 %% Robot joint parameters
 %%%%%%%%%%%%% sub structure of robot.joints
 % qmin: min joint value

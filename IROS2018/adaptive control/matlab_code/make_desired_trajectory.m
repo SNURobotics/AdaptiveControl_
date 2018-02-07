@@ -1,9 +1,11 @@
 function [q_desired, q_desired_dot, q_desired_ddot] = make_desired_trajectory(t, robot)
+global PeriodDesiredTraj
+
 q_desired = zeros(robot.nDOF,1);
 q_desired_dot = zeros(robot.nDOF,1);
 q_desired_ddot = zeros(robot.nDOF,1);
 % for i = 1 : robot.nDOF
-%     for k = 1
+%     for k = [1, 3]
 %     q_desired(i) = q_desired(i) + 0.8 * (cos(k*(pi/2)*t)-1);
 %     q_desired_dot(i) = q_desired_dot(i) - 0.8 *k* (pi/2) * sin(k*(pi/2)*t);
 %     q_desired_ddot(i) = q_desired_ddot(i) - 0.8 *k*k * (pi/2)*(pi/2) * cos(k*(pi/2)*t);
@@ -11,7 +13,7 @@ q_desired_ddot = zeros(robot.nDOF,1);
 % end
 
 a = zeros(robot.nDOF, 5); b = zeros(robot.nDOF, 5); q0 = zeros(robot.nDOF,1);
-w_f = 0.1 * pi;
+w_f = 2 * pi / PeriodDesiredTraj;
 a = [  0.05, -0.29, 0.48, 0.55, 0.65;
  0.03, 0.29, -0.23, 0.32, 0.82;
  -0.07, 0.40, 0.45, 0.40, -0.03;

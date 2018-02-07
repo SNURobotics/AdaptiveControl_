@@ -138,7 +138,7 @@ for num = 1:robot.nDOF
     robot.link(num).screw = Adj(invSE3(robot.link(num).M))*[0;0;1;0;0;0]; % z-axis
     robot.link(num).Ttool = [eye(3),[0;0;0];zeros(1,3),1];
     if num == robot.nDOF 
-        m_load = 3; R_load = 0.05;
+        m_load = 3; R_load = 0.5;
         robot.link(num).J = robot.link(num).J + [((2/5) * m_load * R_load^2)* eye(3,3), zeros(3,3);zeros(3,3), m_load*eye(3,3)]; 
     end
 end
