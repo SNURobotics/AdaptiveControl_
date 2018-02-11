@@ -1,4 +1,5 @@
 function robot = wam7robot_with_load(Tbase, includeMotor)
+global LoadShape
 if nargin < 2
     includeMotor = false;
     if nargin < 1
@@ -137,9 +138,31 @@ for num = 1:robot.nDOF
     robot.link(num).M = [RotZ(dh_par(num,4)),[0;0;dh_par(num,3)];0,0,0,1]*[RotX(dh_par(num,1)),[dh_par(num,2);0;0];0,0,0,1];
     robot.link(num).screw = Adj(invSE3(robot.link(num).M))*[0;0;1;0;0;0]; % z-axis
     robot.link(num).Ttool = [eye(3),[0;0;0];zeros(1,3),1];
-    if num == robot.nDOF 
-        m_load = 3; R_load = 0.5;
-        robot.link(num).J = robot.link(num).J + [((2/5) * m_load * R_load^2)* eye(3,3), zeros(3,3);zeros(3,3), m_load*eye(3,3)]; 
+    if num == robot.nDOF    
+        if(LoadShape == 0) % sphere
+            m_load = 3; R_load = 0.05;
+            robot.link(num).J = robot.link(num).J + [((2/5) * m_load * R_load^2)* eye(3,3), zeros(3,3);zeros(3,3), m_load*eye(3,3)];
+        elseif(LoadShape == 1) % parallelepiped
+            m_load = 3;
+            l1 = 0.05;
+            l2 = 0.05;
+            l3 = 0.5;
+            I_moment = eye(3);
+            I_moment(1,1) = 1/12 * m_load * (l2^2+l3^2);
+            I_moment(2,2) = 1/12 * m_load * (l1^2+l3^2);
+            I_moment(3,3) = 1/12 * m_load * (l1^2+l2^2);
+            robot.link(num).J = robot.link(num).J + [ I_moment, zeros(3,3);zeros(3,3), m_load*eye(3,3)];
+        else  % asymmetric arbitary
+            m_load = 3;
+            I_moment = [15      -8.5    -2.5
+                -8.5    22.5  	-0.1
+                -2.5    -0.1 	9.0] * 0.001; % positive-definite
+            r = [0.5;
+                0.4;
+                -0.7]*0.1;
+            robot.link(num).J = robot.link(num).J + S2G([I_moment+m_load*r*r', m_load*r;m_load*r',m_load]);
+            
+        end
     end
 end
 

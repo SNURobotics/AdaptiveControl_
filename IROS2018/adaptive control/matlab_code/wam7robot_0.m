@@ -1,4 +1,5 @@
 function robot = wam7robot_0(Tbase, includeMotor)
+global AdaptEFonly
 if nargin < 2
     includeMotor = false;
     if nargin < 1
@@ -150,13 +151,19 @@ end
 robot.Tendeffector = [eye(3),[0;0;0];zeros(1,3),1];
 robot.link(robot.nDOF).Ttool = robot.Tendeffector;
 %% add noise
-m_noise = zeros(robot.nDOF,1);
-R_noise = zeros(robot.nDOF, 1);
-for num = 1:robot.nDOF
-    m(num) = robot.link(num).J(4,4)/3;
-    R(num) = 0.05;
-    robot.link(num).J = robot.link(num).J*0.9 + [((2/5) * m(num) * R(num)^2)* eye(3,3), zeros(3,3);zeros(3,3), m(num)*eye(3,3)]; 
-
+if(AdaptEFonly) 
+    num = robot.nDOF;
+    m_load_estimate = 1;
+    R_load_estimate = 0.05;
+    robot.link(num).J = robot.link(num).J + [((2/5) * m_load_estimate * R_load_estimate^2)* eye(3,3), zeros(3,3);zeros(3,3), m_load_estimate*eye(3,3)];
+else  % entire
+    m_noise = zeros(robot.nDOF,1);
+    R_noise = zeros(robot.nDOF, 1);
+    for num = 1:robot.nDOF
+        m(num) = robot.link(num).J(4,4)/3;
+        R(num) = 0.05;
+        robot.link(num).J = robot.link(num).J*0.9 + [((2/5) * m(num) * R(num)^2)* eye(3,3), zeros(3,3);zeros(3,3), m(num)*eye(3,3)];
+    end
 end
 %% Robot joint parameters
 %%%%%%%%%%%%% sub structure of robot.joints

@@ -1,25 +1,33 @@
 clear all
 close all
 clc
-
+set(0,'defaultfigurecolor',[1 1 1])
 % global g
 % g = 9.8;
 
 %% Setting
-global AdaptEFonly NaturalAdaptation EulerIntegration dt PeriodDesiredTraj
+global AdaptEFonly NaturalAdaptation Euclidean_enhanced dt PeriodDesiredTraj LoadShape TrajAmplitude
 
 % important variables
-NaturalAdaptation = true;
-AdaptEFonly = false;
-WithLoad = false;
-EulerIntegration = false;
+NaturalAdaptation = false;                           % Natural vs. Euclidean
+AdaptEFonly = false;                                     %  EF only vs. Entire
+WithLoad = false;                                           % Loaded vs. Unloaded
+Euclidean_enhanced = false;                               % Mahalnobis+Stop at boundary vs. Original
+LoadShape = 0;  % 0: Sphere, 1: parallelepiped, 2:asymmetric arbitrary 
+TrajAmplitude = 0.8;
+SectionA = false;
+SectionB = true;
 
 % not important variables
 n_time = 2000;
-end_time = 60;
+end_time = 25;
 dt = end_time/(n_time-1);
-PeriodDesiredTraj = 20;
+PeriodDesiredTraj = 5;
 ShowVideo = false;
+
+nTraj = end_time/PeriodDesiredTraj;
+TrajStepsize = n_time / nTraj;
+rad2deg = 180/pi;
 
 %% Robot initialization
 
@@ -31,47 +39,73 @@ end
 
 robot_0 = wam7robot_0;
 color = rand(robot.nDOF,3);
-%% simluation
+
+% Initial parameter
 global state0_parameter
 tspan = linspace(0,end_time,n_time);
 state0_joint = zeros(robot.nDOF*2,1); % [joint_angle; joint_velocity]
-[state0_joint(1:robot.nDOF,1), state0_joint(robot.nDOF+1:robot.nDOF*2,1)] = make_desired_trajectory(0, robot_0);  %% setting inital joint angles and velocities with error zero
+[state0_joint(1:robot.nDOF,1), state0_joint(robot.nDOF+1:robot.nDOF*2,1)] = make_desired_trajectory_sample(0, 0.8, robot_0);  %% setting inital joint angles and velocities with error zero
 state0_parameter = zeros(robot_0.nDOF*10,1); % set of inertial parameters
 for i =1 : robot.nDOF
     state0_parameter(10*(i-1)+1:10*i,1) = G2p(robot_0.link(i).J);
 end
 state0_augmented = [state0_joint;state0_parameter];
-[t,state_augmented] = ode45(@(t,state_augmented) Dynamics_Adaptive(t, state_augmented, robot), tspan, state0_augmented);
-% [t_euler, state_augmented_euler] = euler_integration_Dynamics_Adaptive(robot, tspan, state0_augmented);
 
+% Make desired trajectory
+q_desired = zeros(robot.nDOF,n_time);
+q_desired_dot = zeros(robot.nDOF,n_time);
+q_desired_ddot = zeros(robot.nDOF,n_time);
+for j = 1 : n_time
+    [q_desired(:,j), q_desired_dot(:,j), q_desired_ddot(:,j)] = make_desired_trajectory_sample(tspan(j), 0.8, robot);
+end
 
-% state_joint = state_augmented(:,1:robot.nDOF)';
-% tic
-% for k =1 : size(state_joint,2)
-%     theta = state_joint(:,k);
-% [T, Tsave] = forkine(robot,theta);
-% G = zeros(6,6,robot.nDOF);
-% for j =1 :robot.nDOF
-%     G(:,:,j) = robot.link(j).J;
-% end
-% plot_inertiatensor(Tsave, G, 0.1, color);hold on;
-% draw_SE3(eye(4,4));
-% for i = 1 : robot.nDOF
-%     draw_SE3(Tsave(:,:,i));
-% end
-% drawnow;
-% hold off;
-% end
-% toc
-
-%% plot in zero position
+% plot in zero position
 theta = zeros(robot.nDOF,1);theta(1) = pi/2;
 [T, Tsave] = forkine(robot,theta);
 G = zeros(6,6,robot.nDOF);
 for j =1 :robot.nDOF
     G(:,:,j) = robot.link(j).J;
 end
-figure(1)
+plot_inertiatensor(Tsave, G, 0.1, color); hold on;
+draw_SE3(eye(4,4));
+for i = 1 : robot.nDOF
+    draw_SE3(Tsave(:,:,i));
+end
+hold off;
+
+%% simluation
+if(SectionA)
+% Method 1: Euclidean origin
+Euclidean_enhanced = false;                    % Stop at boundary vs. Original
+NaturalAdaptation = false;                           % Natural vs. Euclidean
+[t,state_augmented] = ode45(@(t,state_augmented) Dynamics_Adaptive(t, state_augmented, robot), tspan, state0_augmented);
+TrackingError_1 = state_augmented(:,1:robot.nDOF)-q_desired';
+
+% Method 2: Euclidean enhanced
+Euclidean_enhanced = true;                    % Stop at boundary vs. Original
+NaturalAdaptation = false;                           % Natural vs. Euclidean
+[~,state_augmented] = ode45(@(t,state_augmented) Dynamics_Adaptive(t, state_augmented, robot), tspan, state0_augmented);
+TrackingError_2 = state_augmented(:,1:robot.nDOF)-q_desired';
+
+% Method 3: Natural
+Euclidean_enhanced = false;                    % Stop at boundary vs. Original
+NaturalAdaptation = true;                           % Natural vs. Euclidean
+[~,state_augmented] = ode45(@(t,state_augmented) Dynamics_Adaptive(t, state_augmented, robot), tspan, state0_augmented);
+% [~, state_augmented_3] = euler_integration_Dynamics_Adaptive(robot, tspan, state0_augmented);
+TrackingError_3 = state_augmented(:,1:robot.nDOF)-q_desired';
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+%% Section A. Entire adaptation
+%% plot in zero position
+
+theta = zeros(robot.nDOF,1);theta(1) = pi/2;
+[T, Tsave] = forkine(robot,theta);
+G = zeros(6,6,robot.nDOF);
+for j =1 :robot.nDOF
+    G(:,:,j) = robot.link(j).J;
+end
+figure(100)
 plot_inertiatensor(Tsave, G, 0.5, color); hold on;
 draw_SE3(eye(4,4));
 for i = 1 : robot.nDOF
@@ -79,67 +113,290 @@ for i = 1 : robot.nDOF
 end
 title('Robot inertia in zero-position')
 
-%% Result plot
-% Desired trajectory
-q_desired = zeros(robot.nDOF,n_time);
-q_desired_dot = zeros(robot.nDOF,n_time);
-q_desired_ddot = zeros(robot.nDOF,n_time);
-for j = 1 : n_time
-    [q_desired(:,j), q_desired_dot(:,j), q_desired_ddot(:,j)] = make_desired_trajectory(t(j), robot);
-end
-
+%% Tracking error plot
+% % Tracking of each joint
 % for i = 1 : robot.nDOF
 %     figure(i); 
 %     plot(t, state_augmented(:,i));
 %     hold on;
 %     plot(t, q_desired(i,:));
 % end
+% 
+% % Tracking Error plot: transient
+% figure(101); hold on;
+% title('Tracking error (joint angle)')
+% ylabel('Error (rad)')
+% xlabel('Time (sec)')
+% TrackingError = zeros(size(q_desired'));
+% for i = 1 : robot.nDOF
+%     TrackingError(:,i) = state_augmented(:,i)-q_desired(i,:)';
+%     plot(t, TrackingError);
+% end
+% legend('joint 1','joint 2','joint 3','joint 4','joint 5','joint 6','joint 7')
+% 
+% % Tracking error norm: transient
+% errorNorm = sqrt(sum(TrackingError.^2,2)) / sqrt(robot.nDOF);
+% figure(102)
+% plot(t, errorNorm);
+% title('Tracking error (Total)')
+% ylabel('Error (deg)')
+% xlabel('Time (sec)')
 
-% Error plot
-figure(100); hold on;
-title('Tracking error (joint angle)')
-xlabel('Error (deg)')
-ylabel('Time (sec)')
-for i = 1 : robot.nDOF
-    plot(t, state_augmented(:,i)-q_desired(i,:)');
+%% Total error per rounds (Cyclic)
+RMSErrorPerRounds = zeros(3, nTraj);
+for i=1:nTraj
+    errorNorm = sqrt(sum(TrackingError_1.^2,2)) / sqrt(robot.nDOF);
+    RMSErrorPerRounds(1,i) = rad2deg * rms(errorNorm(TrajStepsize*(i-1)+1:TrajStepsize*i));
+    errorNorm = sqrt(sum(TrackingError_2.^2,2)) / sqrt(robot.nDOF);
+    RMSErrorPerRounds(2,i) = rad2deg * rms(errorNorm(TrajStepsize*(i-1)+1:TrajStepsize*i));
+    errorNorm = sqrt(sum(TrackingError_3.^2,2)) / sqrt(robot.nDOF);
+    RMSErrorPerRounds(3,i) = rad2deg * rms(errorNorm(TrajStepsize*(i-1)+1:TrajStepsize*i));
 end
-legend('joint 1','joint 2','joint 3','joint 4','joint 5','joint 6','joint 7')
 
-% Total error
-errorNorm = sqrt(sum((state_augmented(:,1:7)-q_desired(1:7,:)').^2,2));
-figure(101)
-plot(t, errorNorm);
-title('Tracking error (Total)')
-xlabel('Error (deg)')
-ylabel('Time (sec)')
+figure(103)
+bar((1:nTraj)',RMSErrorPerRounds')
+title('Tracking error on a cyclic trajectory')
+xlabel('Rounds')
+ylabel('RMS error (deg)')
+legend('Euc-origin', 'Euc-enhanced', 'Natural')
+
+%% Generalizability: RMS Error by trajectory rounds (Sequence)
+
+% make a sequence of 5 sample trajectories 
+n_time_sample = n_time;
+tspan_sample = linspace(0,PeriodDesiredTraj,n_time_sample);
+q_desired_1 = zeros(robot.nDOF,n_time_sample);
+q_desired_dot_1 = zeros(robot.nDOF,n_time_sample);
+q_desired_ddot_1 = zeros(robot.nDOF,n_time_sample);
+q_desired_2 = zeros(robot.nDOF,n_time_sample);
+q_desired_dot_2 = zeros(robot.nDOF,n_time_sample);
+q_desired_ddot_2 = zeros(robot.nDOF,n_time_sample);
+q_desired_3 = zeros(robot.nDOF,n_time_sample);
+q_desired_dot_3 = zeros(robot.nDOF,n_time_sample);
+q_desired_ddot_3 = zeros(robot.nDOF,n_time_sample);
+q_desired_4 = zeros(robot.nDOF,n_time_sample);
+q_desired_dot_4 = zeros(robot.nDOF,n_time_sample);
+q_desired_ddot_4 = zeros(robot.nDOF,n_time_sample);
+q_desired_5 = zeros(robot.nDOF,n_time_sample);
+q_desired_dot_5 = zeros(robot.nDOF,n_time_sample);
+q_desired_ddot_5 = zeros(robot.nDOF,n_time_sample);
+A1 = 0.4;
+A2 = 0.6;
+A3 = 0.8;
+A4 = 1.0;
+A5 = 1.2;
+for j = 1 : n_time_sample
+    [q_desired_1(:,j), q_desired_dot_1(:,j), q_desired_ddot_1(:,j)] = make_desired_trajectory_sample(tspan_sample(j), A1, robot);
+    [q_desired_2(:,j), q_desired_dot_2(:,j), q_desired_ddot_2(:,j)] = make_desired_trajectory_sample(tspan_sample(j), A2, robot);
+    [q_desired_3(:,j), q_desired_dot_3(:,j), q_desired_ddot_3(:,j)] = make_desired_trajectory_sample(tspan_sample(j), A3, robot);
+    [q_desired_4(:,j), q_desired_dot_4(:,j), q_desired_ddot_4(:,j)] = make_desired_trajectory_sample(tspan_sample(j), A4, robot);
+    [q_desired_5(:,j), q_desired_dot_5(:,j), q_desired_ddot_5(:,j)] = make_desired_trajectory_sample(tspan_sample(j), A5, robot);
+end
+
+% Run
+RMSErrorPerRounds_sample = zeros(3, 5);
+Deadzone = zeros(3, 5);
+Euclidean_enhanced_cell = {false, true, false};% Mahalnobis+Stop at boundary vs. Original
+NaturalAdaptation_cell = {false, false, true};% Natural vs. Euclidean
+for expNumb=1:3
+    Euclidean_enhanced = Euclidean_enhanced_cell{expNumb};
+    NaturalAdaptation = NaturalAdaptation_cell{expNumb};
+    
+    state0_augmented_1 = state0_augmented;
+    [t_1,state_augmented_1] = ode45(@(t,state_augmented) Dynamics_Adaptive_sample(t, state_augmented, robot,A1), tspan_sample, state0_augmented_1);
+    [t_2,state_augmented_2] = ode45(@(t,state_augmented) Dynamics_Adaptive_sample(t, state_augmented, robot,A2), tspan_sample, state_augmented_1(end,:)');
+    [t_3,state_augmented_3] = ode45(@(t,state_augmented) Dynamics_Adaptive_sample(t, state_augmented, robot,A3), tspan_sample, state_augmented_2(end,:)');
+    [t_4,state_augmented_4] = ode45(@(t,state_augmented) Dynamics_Adaptive_sample(t, state_augmented, robot,A4), tspan_sample, state_augmented_3(end,:)');
+    [t_5,state_augmented_5] = ode45(@(t,state_augmented) Dynamics_Adaptive_sample(t, state_augmented, robot,A5), tspan_sample, state_augmented_4(end,:)');
+    TrackingError_sample1 = state_augmented_1(:,1:robot.nDOF)-q_desired_1';
+    TrackingError_sample2 = state_augmented_2(:,1:robot.nDOF)-q_desired_2';
+    TrackingError_sample3 = state_augmented_3(:,1:robot.nDOF)-q_desired_3';
+    TrackingError_sample4 = state_augmented_4(:,1:robot.nDOF)-q_desired_4';
+    TrackingError_sample5 = state_augmented_5(:,1:robot.nDOF)-q_desired_5';
+    Deadzone_sample1 = ComputeDeadZone(state_augmented_1(:,end-robot.nDOF*10+1:end),Euclidean_enhanced,NaturalAdaptation);
+    Deadzone_sample2 = ComputeDeadZone(state_augmented_2(:,end-robot.nDOF*10+1:end),Euclidean_enhanced,NaturalAdaptation);
+    Deadzone_sample3 = ComputeDeadZone(state_augmented_3(:,end-robot.nDOF*10+1:end),Euclidean_enhanced,NaturalAdaptation);
+    Deadzone_sample4 = ComputeDeadZone(state_augmented_4(:,end-robot.nDOF*10+1:end),Euclidean_enhanced,NaturalAdaptation);
+    Deadzone_sample5 = ComputeDeadZone(state_augmented_5(:,end-robot.nDOF*10+1:end),Euclidean_enhanced,NaturalAdaptation);
+    
+    % Total error per rounds
+    errorNorm = sqrt(sum(TrackingError_sample1.^2,2)) / sqrt(robot.nDOF);
+    RMSErrorPerRounds_sample(expNumb,1) = rad2deg * rms(errorNorm);
+    errorNorm = sqrt(sum(TrackingError_sample2.^2,2)) / sqrt(robot.nDOF);
+    RMSErrorPerRounds_sample(expNumb,2) = rad2deg * rms(errorNorm);
+    errorNorm = sqrt(sum(TrackingError_sample3.^2,2)) / sqrt(robot.nDOF);
+    RMSErrorPerRounds_sample(expNumb,3) = rad2deg * rms(errorNorm);
+    errorNorm = sqrt(sum(TrackingError_sample4.^2,2)) / sqrt(robot.nDOF);
+    RMSErrorPerRounds_sample(expNumb,4) = rad2deg * rms(errorNorm);
+    errorNorm = sqrt(sum(TrackingError_sample5.^2,2)) / sqrt(robot.nDOF);
+    RMSErrorPerRounds_sample(expNumb,5) = rad2deg * rms(errorNorm);
+    
+    % Deadzone time ratio
+    Deadzone(expNumb,1) = size(Deadzone_sample1,1) / n_time_sample;
+    Deadzone(expNumb,2) = size(Deadzone_sample2,1) / n_time_sample;
+    Deadzone(expNumb,3) = size(Deadzone_sample3,1) / n_time_sample;
+    Deadzone(expNumb,4) = size(Deadzone_sample4,1) / n_time_sample;
+    Deadzone(expNumb,5) = size(Deadzone_sample5,1) / n_time_sample;
+end
+
+% Tracking error plot
+figure(104)
+bar((1:5)',RMSErrorPerRounds_sample')
+title('Tracking error on a sequence of trajectories')
+xlabel('Trajectory sequence')
+ylabel('RMS error (deg)')
+legend('Euc-origin', 'Euc-enhanced', 'Natural')
+
+% Deadzone plot
+figure(105)
+bar((1:5)',Deadzone')
+title('Deadzone on a sequence of trajectories')
+xlabel('Trajectory sequence')
+ylabel('Time duration')
+legend('Euc-origin', 'Euc-enhanced', 'Natural')
+end
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+%% Section B. Adapt load on EF
+if(SectionB)
+% important variables
+AdaptEFonly = true;                                     %  EF only vs. Entire
+WithLoad = true;                                           % Loaded vs. Unloaded
+LoadShape_cell = {0,1,2};  % 0: Sphere, 1: parallelepiped, 2:asymmetric arbitrary
+LoadShape_string = {'Sphere','Parallelepiped','Arbitrary'};
+end_time = 25;
+n_time = 25000;
+dt = end_time/(n_time-1);
+PeriodDesiredTraj = 5;
+TrajAmplitude = 0.8;
+nTraj = end_time/PeriodDesiredTraj;
+TrajStepsize = n_time / nTraj;
+tspan = linspace(0,end_time,n_time);
+
+% Make desired trajectory
+q_desired = zeros(robot.nDOF,n_time);
+q_desired_dot = zeros(robot.nDOF,n_time);
+q_desired_ddot = zeros(robot.nDOF,n_time);
+for j = 1 : n_time
+    [q_desired(:,j), q_desired_dot(:,j), q_desired_ddot(:,j)] = make_desired_trajectory_sample(tspan(j), TrajAmplitude, robot);
+end
+
+% Run
+RMSErrorPerRounds = zeros(3, nTraj, 3);
+state_augmented_1 = cell(1,3);
+state_augmented_2 = cell(1,3);
+state_augmented_3 = cell(1,3);
+for k=1:3 % size(LoadShape_cell,2)
+    LoadShape = LoadShape_cell{k};
+    disp([num2str(k) 'th LoadShape = ' num2str(LoadShape)])
+    % Initial parameter
+    robot0 = wam7robot_0;
+    robot = wam7robot_with_load;
+    state0_joint = zeros(robot.nDOF*2,1); % [joint_angle; joint_velocity]
+    [state0_joint(1:robot.nDOF,1), state0_joint(robot.nDOF+1:robot.nDOF*2,1)] = make_desired_trajectory_sample(0, TrajAmplitude, robot0);  %% setting inital joint angles and velocities with error zero
+    state0_parameter = zeros(robot0.nDOF*10,1); % set of inertial parameters
+    for i =1 : robot0.nDOF
+        state0_parameter(10*(i-1)+1:10*i,1) = G2p(robot0.link(i).J);
+    end
+    state0_augmented = [state0_joint;state0_parameter];
+
+    % Method 1: Euclidean origin
+    Euclidean_enhanced = false;                    % Stop at boundary vs. Original
+    NaturalAdaptation = false;                           % Natural vs. Euclidean
+%     [t,state_augmented_1] = ode45(@(t,state_augmented) Dynamics_Adaptive(t, state_augmented, robot), tspan, state0_augmented);
+    [t, state_augmented_1{k}] = euler_integration_Dynamics_Adaptive(robot, tspan, state0_augmented);
+    TrackingError_1 = state_augmented_1{k}(:,1:robot.nDOF)-q_desired';
+    disp('Euc-orign')
+    
+    % Method 2: Euclidean enhanced
+    Euclidean_enhanced = true;                    % Stop at boundary vs. Original
+    NaturalAdaptation = false;                           % Natural vs. Euclidean
+%     [~,state_augmented_2] = ode45(@(t,state_augmented) Dynamics_Adaptive(t, state_augmented, robot), tspan, state0_augmented);
+    [~, state_augmented_2{k}] = euler_integration_Dynamics_Adaptive(robot, tspan, state0_augmented);
+    TrackingError_2 = state_augmented_2{k}(:,1:robot.nDOF)-q_desired';
+    disp('Euc-enhanced')
+
+    % Method 3: Natural
+    Euclidean_enhanced = false;                    % Stop at boundary vs. Original
+    NaturalAdaptation = true;                           % Natural vs. Euclidean
+%     [~,state_augmented_3] = ode45(@(t,state_augmented) Dynamics_Adaptive(t, state_augmented, robot), tspan, state0_augmented);
+    [~, state_augmented_3{k}] = euler_integration_Dynamics_Adaptive(robot, tspan, state0_augmented);
+    TrackingError_3 = state_augmented_3{k}(:,1:robot.nDOF)-q_desired';
+    disp('Natural')
+
+    % Total error per rounds (Cyclic)
+    for i=1:nTraj
+        errorNorm_1 = sqrt(sum(TrackingError_1.^2,2)) / sqrt(robot.nDOF);
+        RMSErrorPerRounds(1,i,k) = rad2deg * rms(errorNorm_1(TrajStepsize*(i-1)+1:TrajStepsize*i));
+        errorNorm_2 = sqrt(sum(TrackingError_2.^2,2)) / sqrt(robot.nDOF);
+        RMSErrorPerRounds(2,i,k) = rad2deg * rms(errorNorm_2(TrajStepsize*(i-1)+1:TrajStepsize*i));
+        errorNorm_3 = sqrt(sum(TrackingError_3.^2,2)) / sqrt(robot.nDOF);
+        RMSErrorPerRounds(3,i,k) = rad2deg * rms(errorNorm_3(TrajStepsize*(i-1)+1:TrajStepsize*i));
+    end
+    figure(106 + k)
+    bar((1:nTraj)',RMSErrorPerRounds(:,:,k)')
+    title(['Tracking error on a cyclic trajectory: ' LoadShape_string{k}])
+    xlabel('Rounds')
+    ylabel('RMS error (deg)')
+    legend('Euc-origin', 'Euc-enhanced', 'Natural')
+
+    figure(110+k)
+    plot(tspan, [errorNorm_1';errorNorm_2';errorNorm_3']);
+    title(['Tracking error loaded by ' LoadShape_string{k}])
+    xlabel('Time (sec)')
+    ylabel('RMS error (deg)')
+    legend('Euc-origin', 'Euc-enhanced', 'Natural')
+end
+
+end
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 %% Adapting video
 if(ShowVideo)
     G = zeros(6,6,robot.nDOF);
     for j =1 :robot.nDOF
         G(:,:,j) = robot.link(j).J;
     end
-    for k =1 :2:  size(state_augmented,1)
+    for k =1 :50:  size(state_augmented,1)
+        
         theta = state_augmented(k,1:robot.nDOF);
         [T, Tsave] = forkine(robot,theta);
         G_out = p2G(state_augmented(k,2*robot.nDOF+1:end)');
         aa = figure(10);
-        set(aa, 'position',[150 150 1200 500]);
-        a = subplot(1,1,1);
+        set(aa, 'position',[150 150 1800 500]);
+                % plot in zero position
+        c = subplot(1,3,1);
+        G = zeros(6,6,robot.nDOF);
+        for j =1 :robot.nDOF
+            G(:,:,j) = robot.link(j).J;
+        end
+        plot_inertiatensor(Tsave, G, 0.7, color); hold on;
+        draw_SE3(eye(4,4));
+        for i = 1 : robot.nDOF
+            draw_SE3(Tsave(:,:,i));
+        end
+        axis([-1.0 1.0 -1.0 1.0 -1.0 1.0]);
+        set(c,'position',[0.04 0.1 0.25,0.8]);
+%         hold off;
+        
+        a = subplot(1,3,2);
         plot_inertiatensor(Tsave, G_out, 0.7, color);hold on;
         draw_SE3(eye(4,4));
         for i = 1 : robot.nDOF
             draw_SE3(Tsave(:,:,i));
         end
         axis([-1.0 1.0 -1.0 1.0 -1.0 1.0]);
-        set(a,'position',[0.1 0.1 0.35,0.8]);
+        set(a,'position',[0.37 0.1 0.25,0.8]);
         % hold off;
-        b = subplot(1,2,2);
+        b = subplot(1,3,3);
         hold on; ylim([-2 2]);
         y = [reshape(G_out(4,4,:),[],1)./reshape(G(4,4,:),[],1)];
         bar(y);
-        set(b,'position',[0.55 0.1 0.35,0.8]);
+        set(b,'position',[0.7 0.1 0.25,0.8]);
         set(b, 'xtick', [1:robot.nDOF], 'xticklabel', {'1','2', '3', '4', '5', '6','7'});
         drawnow;
+        
+
     end
     G_out = p2G(state_augmented(end,2*robot.nDOF+1:end)');
     plot_inertiatensor(Tsave(:,:,end), G_out(:,:,end), 0.7, color(end,:));hold on;
