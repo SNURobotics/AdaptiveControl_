@@ -28,6 +28,8 @@
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
 \usepackage{xcolor}
+\usepackage{subfigure}
+\usepackage{multicol}
 
 \newtheorem{proposition}{Proposition}
 \newtheorem{remark}{Remark}
@@ -389,31 +391,53 @@ Engineering choice of $\Sigma$... in [performance in adaptive control] least squ
 % Extension to composite adaptive control
 % \end{remark}
 %\section{Recursive Dynamics for torque input}
-\section{Simulation Results}
-The simulations are conducted by MATLAB and the manipulator we used is Barett WAM 7-DOFs manipulator arm model. The manipulator is assumed to be equipped with a torque-controller and fixed on the ground base. Self-collision and frictions are not considered yet. In order to make the simulation environmnet realistic and practical as possible, the control frequency is set as 1 kHz and the payload is limited to 3 kg. Although it is a tempting option to use {\it{ode45}} function of MATLAB for dynamic simulation, a simple Euler method is adopted since the adaptation of the inertial parameter will be updated digitally in real implementation.
 
-The common task of all experiments is to track a joint space trajectory sequence which is composed of five unit trajectories and each unit trajectory has a period of 5 seconds. Two types of sequences are used, which we refer to a repeated sequence and a varied sequence. The repeated sequence is constructed from five identical cosine curves and the varied sequence is also constructed from the cosine curves but different amplitudes evenly spaced from 0.4 seconds to 1.2 seconds. The cosine curve of an unit trajectory is defined as follows:
+
+\begin{multicols}{1}
+\begin{figure*}[!htb]
+\centering
+\begin{subfigure}
+\centering
+\includegraphics[width=.5\textwidth]{fig/ByRoundVaried.eps}
+\caption{Tracking error of the varied sequence}
+\label{fig:varied}
+\end{subfigure}
+\begin{subfigure}
+\centering
+\includegraphics[width=.5\textwidth]{fig/ByRoundRepeated.eps}
+\caption{Tracking error of the repeated sequence}
+\label{fig:repeated}
+\end{subfigure}
+\end{figure*}
+\end{multicols}
+
+\section{Simulation Results}
+The simulations are conducted in MATLAB and the manipulator we used is Barett WAM 7-DOFs manipulator arm model. The manipulator is assumed to be equipped with a torque-controller and fixed on the ground base. Self-collision and frictions are not considered yet. In order to make the simulation environment realistic and practical as possible, the control frequency is set as 1 kHz and the payload is limited to 3 kg. Although it is a tempting option to use {\it{ode45}} function of MATLAB for dynamic simulation, a simple Euler method is adopted since the adaptation of the inertial parameter will be updated digitally in real implementation.
+
+The common task of all experiments is to track a joint space trajectory sequence which is composed of five unit trajectories. Each unit trajectory has a period of 5 seconds. Two types of sequences are used, which we refer to as a repeated sequence and a varied sequence. The repeated sequence is constructed from five identical cosine curves and the varied sequence is also constructed from the cosine curves but different amplitudes evenly spaced from $0.4$ to $1.2$. The unit trajectory is synthesized as follows:
 \begin{equation*}
 	q_i(t) = A_i~(\cos(\frac{2\pi}{T_i}t)-1)  \quad (i=1,\cdots,n)
 \end{equation*}
-where $q_i$ is the joint angle of the $i$th joint, $A_i$ is the amplitude,  $T_i$ is the period and $i$ is the joint number.
+where $q_i$ is the joint angle of the $i$th joint, $A_i$ is the amplitude,  $T_i$ is the period and $i$ is the joint number. There are four acronyms to indicate different adaptive control algorithms to be compared: 'Euc-origin' method is the original passivity-based adaptive control described in Section \ref{section2}. 'Euc-project' method is the modified method which projects the inertia tensors to satisfy physically-consistency and 'Euc-enhanced' method is another 'Euc-enhanced' method that uses constant pullback metric on initial estimate; $\Gamma$ is determined properly by the nominal parameters of the inertias. Finally, 'Natural' method indicates our proposed adaptive control algorithm. 
 
-The same control gains are used for each experiment: $\Lambda = 30.0, ~\Gamma^{-1} = 0.001\times\mathbf{1}$ and $\gamma^{-1} = 1.0$. 
+The same control gains are used for each experiment:  $\Lambda = 30.0\cdot I, ~\Gamma^{-1} = 0.0001\cdot I$ and $\gamma^{-1} = 1.0$. It might be noticed that the scale of $\Gamma$ and $\gamma$ is quite different, but those are not comparable by simply subtracting each other. The body links of the manipulator are visualized as ellipsoids which are physically-equivalent. That is, the inertia tensor of an ellipsoid is identical to that of the corresponding link. 
 
-The body links of the manipulator are visualized as ellipsoids which are physically-equivalent. That is, the inertia tensor of an ellipsoid is identical to that of the corresponding link.
-\subsection{Adaptation of Entire Set of Inertial Parameters}
-Repeated trajectory the task commoly praticed.
-Sequence of different trajectory to test generalization
+In Section \ref{section:entire}, it is assumed that nominal inertial parameters are given and the adaptations are applied to the entire set of the robot body. In Section \ref{section:EFonly}, three unknown loads are subjected to be adapted while the true parameters of the robot body inertias are known.
 
-\subsection{Adaptation of Unknown Load}
+
+\subsection{Adaptation of Entire Set of Inertial Parameters} \label{section:entire}
+In this section, an adaptation of the whole body is discussed. For the first experiment, the desired trajectory is a repeated sequence with a constant amplitude of 0.8. The nominal parameter is slightly perturbed from the true parameters as follows: $I_i \leftarrow k I_i + \frac{2}{5}m_{\text{perturb}}R_{\text{perturb}}^2$, $[h_i]\leftarrow k [h_i] $ and $m_i \leftarrow k ~m_i + m_{\text{perturb}}$, where $I_i$, $h_i$ and $m_i$ are inertial moment, center of mass and mass of the $i$th link, respectively. The perturbation $m_{\text{perturb}}=1.0$kg, $R_{\text{perturb}}=0.1$m and $k=0.9$. 
+
+For the second experiment, the desired trajectory is the varied sequence composed of five unit trajectories, whose amplitudes are 1.2, 1.0, 0.8, 0.6 and 0.4. By changing the trajectories, the generalizability can be revealed from this experiment. It is said to be 'generalizable' when an adapted parameter by a certain training set also works well in an arbitrary test set. If an adaptive control shows poor generalizability, then it could behave unsafely or unexpectedly while tracking a new trajectory. The Figure~\ref{fig:varied}
+
+
+
+\subsection{Adaptation of Unknown Load} \label{section:EFonly}
 Repeated trajectory
-
-
 
 As previously mentioned, the transient tracking error is not converged in any case by 'Euc-origin' method while 'Euc-enhnaced' method converged except the asymmetric load of the third case and 'Natural' is converged in all cases. 
 
-Note that the tracking error of 
-\newpage
+Note that the RMS tracking error of the third load is initially the lowest by 'Euc-origin' method.
 
 % \subsection{Selecting a Template (Heading 2)}
 
