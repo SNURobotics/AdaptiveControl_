@@ -1,5 +1,5 @@
 function [dot_state_augmented] = Dynamics_Adaptive(t, state_augmented, robot)
-global state0_parameter AdaptEFonly NaturalAdaptation Euclidean_enhanced dt TrajAmplitude
+global state0_parameter AdaptEFonly NaturalAdaptation Euclidean_enhanced dt TrajAmplitude Euclidean_projection
 dot_state_joint = zeros(robot.nDOF*2,1);
 dot_state_parameter = zeros(robot.nDOF*10,1);
 
@@ -35,7 +35,7 @@ input_torque = input_torque - K * r_input;
 if(NaturalAdaptation || Euclidean_enhanced)
     Gamma_inv = 1 ; % natural
 else
-    Gamma_inv = 0.001; % euclidean
+    Gamma_inv = 0.0001; % euclidean
 end
 v_adapt = v_input;
 a_adapt = a_input - lambda * r_input;
@@ -69,7 +69,7 @@ dot_state_joint(robot.nDOF+1:end,1) = pinv(MM)* ( -CC * state_joint_qdot  -gg  +
 dot_state_parameter = - Gamma_inv * b;
 
 % check if positive definite
-if(Euclidean_enhanced)
+if((~NaturalAdaptation) && Euclidean_projection)
     updated_state_parameter = state_parameter + dt * dot_state_parameter;
     for i=1:robot.nDOF
         ith_updated_S = G2S(p2G(updated_state_parameter(10*(i-1)+1:10*i,1)));

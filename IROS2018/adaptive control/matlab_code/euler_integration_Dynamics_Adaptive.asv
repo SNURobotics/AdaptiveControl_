@@ -5,7 +5,8 @@ t = tspan;
 n_time = size(tspan,2);
 state_augmented = zeros(n_time, size(state0_augmented,1));
 state_augmented(1,:) = state0_augmented';
-
+StopControl = n_time / tspan(end) / 1000; % 1 kHz controller
+Stopper = 0;
 
 % updated_state_parameter = state0_augmented(robot.nDOF*2+1:end);
 %     for i=1:robot.nDOF
@@ -85,32 +86,45 @@ for i = 2 : n_time
     else % Euclidean adaptation
         state_augmented(i,:) = state_augmented(i-1,:) + dt * dot_state_augmented;
     end
-        
+       
+%     % plot
+%     if(rem(i,20) == 1 )
+%         color = [0.3013    0.5590    0.3308
+%             0.2955    0.8541    0.8985
+%             0.3329    0.3479    0.1182
+%             0.4671    0.4460    0.9884
+%             0.6482    0.0542    0.5400
+%             0.0252    0.1771    0.7069
+%             0.8422    0.6628    0.9995];
+%         G = zeros(6,6,robot.nDOF);
+%         for j =1 :robot.nDOF
+%             G(:,:,j) = robot.link(j).J;
+%         end
+%         theta = state_augmented(i,1:robot.nDOF);
+%         [T, Tsave] = forkine(robot,theta);
+%         G_out = p2G(state_augmented(i,2*robot.nDOF+1:end)');
+%         aa = figure(10);
+%         set(aa, 'position',[150 150 1200 500]);
+%         a = subplot(1,1,1);
+%         plot_inertiatensor(Tsave, G_out, 0.7, color);hold on;
+%         draw_SE3(eye(4,4));
+%         for i = 1 : robot.nDOF
+%             draw_SE3(Tsave(:,:,i));
+%         end
+%         axis([-1.0 1.0 -1.0 1.0 -1.0 1.0]);
+%         set(a,'position',[0.1 0.1 0.35,0.8]);
+%         % hold off;
+%         b = subplot(1,2,2);
+%         hold on; ylim([-2 2]);
+%         y = [reshape(G_out(4,4,:),[],1)./reshape(G(4,4,:),[],1)];
+%         bar(y);
+%         set(b,'position',[0.55 0.1 0.35,0.8]);
+%         set(b, 'xtick', [1:robot.nDOF], 'xticklabel', {'1','2', '3', '4', '5', '6','7'});
+%         drawnow;
+%     end
+    
 end
 
-% plot
-
-theta = state_augmented(k,1:robot.nDOF);
-[T, Tsave] = forkine(robot,theta);
-G_out = p2G(state_augmented(k,2*robot.nDOF+1:end)');
-aa = figure(10);
-set(aa, 'position',[150 150 1200 500]);
-a = subplot(1,1,1);
-plot_inertiatensor(Tsave, G_out, 0.7, color);hold on;
-draw_SE3(eye(4,4));
-for i = 1 : robot.nDOF
-    draw_SE3(Tsave(:,:,i));
-end
-axis([-1.0 1.0 -1.0 1.0 -1.0 1.0]);
-set(a,'position',[0.1 0.1 0.35,0.8]);
-% hold off;
-b = subplot(1,2,2);
-hold on; ylim([-2 2]);
-y = [reshape(G_out(4,4,:),[],1)./reshape(G(4,4,:),[],1)];
-bar(y);
-set(b,'position',[0.55 0.1 0.35,0.8]);
-set(b, 'xtick', [1:robot.nDOF], 'xticklabel', {'1','2', '3', '4', '5', '6','7'});
-drawnow;
 
 
 

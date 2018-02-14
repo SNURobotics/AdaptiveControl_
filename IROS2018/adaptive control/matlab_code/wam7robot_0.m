@@ -154,7 +154,7 @@ robot.link(robot.nDOF).Ttool = robot.Tendeffector;
 if(AdaptEFonly) 
     num = robot.nDOF;
     m_load_estimate = 1;
-    R_load_estimate = 0.05;
+    R_load_estimate = 0.1;
     robot.link(num).J = robot.link(num).J + [((2/5) * m_load_estimate * R_load_estimate^2)* eye(3,3), zeros(3,3);zeros(3,3), m_load_estimate*eye(3,3)];
 else  % entire
     m_noise = zeros(robot.nDOF,1);

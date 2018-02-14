@@ -5,7 +5,9 @@ t = tspan;
 n_time = size(tspan,2);
 state_augmented = zeros(n_time, size(state0_augmented,1));
 state_augmented(1,:) = state0_augmented';
-
+StopMax = round(n_time / tspan(end) / 1000); % 1 kHz controller
+Stopper = 0;
+HoldedParameter_dot = 0;
 
 % updated_state_parameter = state0_augmented(robot.nDOF*2+1:end);
 %     for i=1:robot.nDOF
@@ -22,6 +24,15 @@ for i = 2 : n_time
     t_cur = tspan(i);
     dot_state_augmented = Dynamics_Adaptive(t_cur, state_augmented(i-1,:)', robot)';
     
+    % Controller frequency 1 kHz
+    Stopper = Stopper + 1;
+    if(Stopper > StopMax)
+        Stopper = 1;
+    end
+    if(Stopper == StopMax)
+        HoldedParameter_dot = dot_state_augmented;
+    end
+        
 %             state_augmented(i,:) = state_augmented(i-1,:) + dt * dot_state_augmented;
 %             for j=1:robot.nDOF
 %                 P = G2S(p2G(state_augmented(i-1,robot.nDOF*2+1+10*(j-1):robot.nDOF*2+10*j)'))
@@ -36,7 +47,7 @@ for i = 2 : n_time
             state_augmented(i,robot.nDOF*2+1:end) = state_augmented(i-1,robot.nDOF*2+1:end);
             j = robot.nDOF;
             P = G2S(p2G(state_augmented(i-1,robot.nDOF*2+1+10*(j-1):robot.nDOF*2+10*j)'));
-            dP = dt * G2S(p2G(dot_state_augmented(1,robot.nDOF*2+1+10*(j-1):robot.nDOF*2+10*j)'));
+            dP = dt * G2S(p2G(HoldedParameter_dot(1,robot.nDOF*2+1+10*(j-1):robot.nDOF*2+10*j)'));
             %             e = eig(P);
             %             i
             %             dP
@@ -65,7 +76,7 @@ for i = 2 : n_time
         else
             for j=1:robot.nDOF
                 P = G2S(p2G(state_augmented(i-1,robot.nDOF*2+1+10*(j-1):robot.nDOF*2+10*j)'));
-                dP = dt * G2S(p2G(dot_state_augmented(1,robot.nDOF*2+1+10*(j-1):robot.nDOF*2+10*j)'));
+                dP = dt * G2S(p2G(HoldedParameter_dot(1,robot.nDOF*2+1+10*(j-1):robot.nDOF*2+10*j)'));
 %                 e = eig(P);
 %                 i
 %                 dP
@@ -83,7 +94,7 @@ for i = 2 : n_time
             end
         end
     else % Euclidean adaptation
-        state_augmented(i,:) = state_augmented(i-1,:) + dt * dot_state_augmented;
+        state_augmented(i,:) = state_augmented(i-1,:) + dt * HoldedParameter_dot;
     end
        
 %     % plot
