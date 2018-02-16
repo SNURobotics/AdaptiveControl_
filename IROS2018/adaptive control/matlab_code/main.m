@@ -227,13 +227,6 @@ if(SectionA)
      n_time_sample = PeriodDesiredTraj * 10000;
      dt = PeriodDesiredTraj/(n_time_sample-1);
      tspan_sample = linspace(0,PeriodDesiredTraj,n_time_sample);
-     state0_joint = zeros(robot.nDOF*2,1); % [joint_angle; joint_velocity]
-     [state0_joint(1:robot.nDOF,1), state0_joint(robot.nDOF+1:robot.nDOF*2,1)] = make_desired_trajectory_sample(0, A1, robot_0);  %% setting inital joint angles and velocities with error zero
-     state0_parameter = zeros(robot_0.nDOF*10,1); % set of inertial parameters
-     for i =1 : robot.nDOF
-         state0_parameter(10*(i-1)+1:10*i,1) = G2p(robot_0.link(i).J);
-     end
-     state0_augmented = [state0_joint;state0_parameter];
         
      % make a sequence of 5 sample trajectories
      q_desired_1 = zeros(robot.nDOF,n_time_sample);
@@ -263,6 +256,14 @@ if(SectionA)
          [q_desired_4(:,j), q_desired_dot_4(:,j), q_desired_ddot_4(:,j)] = make_desired_trajectory_sample(tspan_sample(j), A4, robot);
          [q_desired_5(:,j), q_desired_dot_5(:,j), q_desired_ddot_5(:,j)] = make_desired_trajectory_sample(tspan_sample(j), A5, robot);
      end
+     
+     state0_joint = zeros(robot.nDOF*2,1); % [joint_angle; joint_velocity]
+     [state0_joint(1:robot.nDOF,1), state0_joint(robot.nDOF+1:robot.nDOF*2,1)] = make_desired_trajectory_sample(0, A1, robot_0);  %% setting inital joint angles and velocities with error zero
+     state0_parameter = zeros(robot_0.nDOF*10,1); % set of inertial parameters
+     for i =1 : robot.nDOF
+         state0_parameter(10*(i-1)+1:10*i,1) = G2p(robot_0.link(i).J);
+     end
+     state0_augmented = [state0_joint;state0_parameter];
     
     % Run
     RMSErrorPerRounds_sample = zeros(4, 5);
