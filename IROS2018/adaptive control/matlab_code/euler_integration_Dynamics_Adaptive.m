@@ -7,7 +7,6 @@ state_augmented = zeros(n_time, size(state0_augmented,1));
 state_augmented(1,:) = state0_augmented';
 StopMax = round(n_time / tspan(end) / 1000); % 1 kHz controller
 Stopper = 0;
-HoldedParameter_dot = 0;
 
 % updated_state_parameter = state0_augmented(robot.nDOF*2+1:end);
 %     for i=1:robot.nDOF
@@ -29,7 +28,7 @@ for i = 2 : n_time
     if(Stopper > StopMax)
         Stopper = 1;
     end
-    if(Stopper == StopMax)
+    if(Stopper == 1)
         HoldedParameter_dot = dot_state_augmented;
     end
         
