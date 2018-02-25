@@ -30,7 +30,7 @@ q_desired_ddot = zeros(robot.nDOF,1);
 
 %%%%%%%%%%%%%%%%   passivity based control   %%%%%%%%%%%%%%%%
 %% Define control law
-lambda = 20.0;
+lambda = 10.0;
 Lambda_mat = lambda * eye(robot.nDOF,robot.nDOF);
 a_input = q_desired_ddot - Lambda_mat * (state_joint_qdot - q_desired_dot);
 v_input = q_desired_dot - Lambda_mat * (state_joint_q - q_desired);

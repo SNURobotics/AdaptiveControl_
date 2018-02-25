@@ -1,6 +1,6 @@
 clear all
 close all
-clc
+% clc
 set(0,'defaultfigurecolor',[1 1 1],'defaultLineLineWidth',2)
 % global g
 % g = 9.8;

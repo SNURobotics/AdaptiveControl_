@@ -169,7 +169,7 @@ else  % entire
         end
     elseif(bBadInitial)
         for num = 1:robot.nDOF
-            m_bad = robot.link(num).J(4,4) * 1.20;
+            m_bad = 0.1;
             R_bad = 0.05;
             robot.link(num).J = [((2/5) * m_bad * R_bad^2)* eye(3,3), zeros(3,3);zeros(3,3), m_bad*eye(3,3)];
         end 
