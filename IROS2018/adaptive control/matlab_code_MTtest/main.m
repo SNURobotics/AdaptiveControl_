@@ -10,10 +10,10 @@ global state0_parameter AdaptEFonly NaturalAdaptation Euclidean_enhanced Euclide
 global PeriodDesiredTraj LoadShape TrajAmplitude bBadInitial NoAdaptation GaussianInitial
 
 % important variables
-SectionA = true; 
-% SectionB = true;
-% ShowVideo = false;
-% bBadInitial = true;
+SectionA = false; 
+SectionB = false;
+ShowVideo = false;
+bBadInitial = false;
 GaussianInitial = true;
 
 % % not important variables
@@ -127,7 +127,7 @@ if(GaussianInitial)
     RMSerror(3) = rad2deg * rms(rms(TrackingError_3));
     RMSerror(4) = rad2deg * rms(rms(TrackingError_4));
     
-    fid = fopen(['SectionA_GaussInit_' date '.txt'], 'a');
+    fid = fopen(['SectionA_GaussInit_Noise35_' date '.txt'], 'a');
     fprintf(fid, '%5.3f %5.3f %5.3f %5.3f\n', RMSerror');
     return;
 end
@@ -552,15 +552,15 @@ if(SectionB)
         title(['Tracking error by round: ' LoadShape_string{k}])
         xlabel('Rounds')
         ylabel('RMS error (deg)')
-        ylim([0 5])
+        ylim([0 90])
         legend('No-adaptation', 'Euclidean', 'Const. pullback', 'Natural')
         
         figure(120+k)
-        plot(tspan, [errorNorm_1{k}';errorNorm_2{k}';errorNorm_3{k}';errorNorm_4{k}']);
+        plot(tspan, rad2deg * [errorNorm_1{k}';errorNorm_2{k}';errorNorm_3{k}';errorNorm_4{k}']);
         title(['Transient tacking error: ' LoadShape_string{k}])
         xlabel('Time (sec)')
         ylabel('RMS error (deg)')
-        ymax = 1;
+        ymax = 90;
         ylim([0 ymax])
         legend('No-adaptation', 'Euclidean', 'Const. pullback', 'Natural')
         hold on;
