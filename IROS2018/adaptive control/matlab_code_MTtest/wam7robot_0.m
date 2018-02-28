@@ -159,8 +159,8 @@ if(AdaptEFonly)
 else  % entire
     if(GaussianInitial)
         for num = 1:robot.nDOF
-            % truncated gaussian of mean 1, std 0.3
-            std = 0.35;
+            % truncated gaussian of mean 1, std 0.4
+            std = 0.4;
             noise = std * randn()+1;
             while(abs(noise-1) > std)
                 noise = std * randn()+1;
