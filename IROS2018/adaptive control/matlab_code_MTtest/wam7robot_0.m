@@ -160,11 +160,12 @@ else  % entire
     if(GaussianInitial)
         for num = 1:robot.nDOF
             % truncated gaussian of mean 1, std 0.4
-            std = 0.4;
-            noise = std * randn()+1;
-            while(abs(noise-1) > std)
-                noise = std * randn()+1;
-            end
+%             std = 0.4;
+%             noise = std * randn()+1;
+%             while(abs(noise-1) > std)
+%                 noise = std * randn()+1;
+%             end
+            noise = 0.7;
             robot.link(num).J = robot.link(num).J * noise;
         end
     elseif(bBadInitial)

@@ -21,16 +21,17 @@ T(1:3,4) = skew(G_b_i(1:3,4:6,i))./G_b_i(4,4,i);
 T = T_sb_i(:,:,i)*T;
 a = sqrt(5*(-S(1,1)+S(2,2)+S(3,3))/(2*(G_b_i(4,4,i))));
 if ~isreal(a)
-    a = 0
+    a = 0;
 end
 b = sqrt(5*(S(1,1)-S(2,2)+S(3,3))/(2*(G_b_i(4,4,i))));
 if ~isreal(b)
-    b = 0
+    b = 0;
 end
 c = sqrt(5*(S(1,1)+S(2,2)-S(3,3))/(2*(G_b_i(4,4,i))));
 if ~isreal(c)
-    c = 0
+    c = 0;
 end
+if a*b*c ~= 0
 % T(1:3,1:3) = T(1:3,1:3)*[a,0,0;0,b,0;0,0,c];
 % draw_SE3(T);
 % transl = T(1:3,1:3)'*T(1:3,4);
@@ -49,6 +50,10 @@ x = data(1:n,:)+M(1); y = data(n+1:2*n,:)+M(2); z = data(2*n+1:end,:)+M(3);
 
 
 sc = surf(x,y,z,'EdgeColor','none','FaceColor',color(i,:),'FaceAlpha',trans);
+else
+    M = T(1:3,4);
+    text(M(1),M(2),M(3),['     Link' num2str(i) 'infeasible'],'HorizontalAlignment','left','FontSize',8);
+end
 hold on;
 end
 axis equal; hold off;

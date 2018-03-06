@@ -39,6 +39,7 @@ if(RandomInit)
     title('')
     xlabel('Noise level (std)')
     ylabel('RMS error (deg)')
+    ylim([0 10])
     xlim([2.5 42.5])
 end
 
@@ -62,7 +63,7 @@ if(Varied)
     end
 
     %% plot
-    figure('Name','Varied','pos',[100 500 600 250])
+    figure('Name','Varied','pos',[100 500 500 250])
     a=MC_mean';
     b=MC_std';
     ctrs = (1:nTrajNumb);
@@ -79,6 +80,7 @@ if(Varied)
     title('')
     xlabel('Round')
     ylabel('RMS error (deg)')
+    ylim([0 5])
     xlim([0.5 5.5])
 end
 
